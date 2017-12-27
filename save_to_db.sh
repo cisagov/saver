@@ -5,13 +5,14 @@ SHARED_DIR='/home/saver/shared'
 # We need a copy of current-federal so we download a copy of just
 # that.  We need the raw file, and domain-scan/gather modifies the
 # fields in the CSV, so we'll use wget here.
-wget -F \
-     https://raw.githubusercontent.com/GSA/data/master/dotgov-domains/current-federal.csv \
+wget https://raw.githubusercontent.com/GSA/data/master/dotgov-domains/current-federal.csv \
      -O current-federal.csv
-mv /tmp/current-federal.csv $SHARED_DIR/artifacts/current-federal-original.csv
+mv current-federal.csv $SHARED_DIR/artifacts/current-federal-original.csv
 
 echo 'Waiting for scanner'
-while [ $(redis-cli -h orchestrator_redis_1 get scanning_complete) != "true" ]
+# Busybox's [ program is a little dumb, so I have to do some extra
+# quoting for it
+while [ "$(redis-cli -h orchestrator_redis_1 get scanning_complete)" != "true" ]
 do
     sleep 5
 done
