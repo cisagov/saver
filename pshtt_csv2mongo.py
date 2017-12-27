@@ -8,7 +8,7 @@ from pymongo import MongoClient
 
 DB_CONFIG_FILE = '/run/secrets/pshtt_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
-SHARED_DATA_DIR = '/home/savershared/'
+SHARED_DATA_DIR = '/home/saver/shared/'
 
 REWRITES_FILE = INCLUDE_DATA_DIR + 'rewrites.csv'
 NON_CYHY_STAKEHOLDERS_FILE = INCLUDE_DATA_DIR + 'noncyhy.csv'
