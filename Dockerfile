@@ -4,11 +4,12 @@ MAINTAINER Shane Frasier <jeremy.frasier@beta.dhs.gov>
 # Install shadow, so we have adduser and addgroup.  We can remove the
 # package once we're finished with it.
 #
-# We also need redis so we can use redis-cli to communicate with
-# redis.
+# We need redis so we can use redis-cli to communicate with redis.  I
+# also reinstall wget with openssl, since otherwise wget does not seem
+# to know how to HTTPS.
 ###
 RUN apk update && \
-    apk add redis shadow
+    apk add wget openssl redis shadow
 
 ###
 # Dependencies
