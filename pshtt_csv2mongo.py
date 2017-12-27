@@ -18,7 +18,7 @@ CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal-original.csv
 UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + 'artifacts/unique-agencies.csv'
 CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.csv'
 
-PSHTT_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/pshtt_results/pshtt.csv'
+PSHTT_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/results/pshtt.csv'
 
 
 # Take a sorted csv from a domain scan and populate a mongo database with the results
