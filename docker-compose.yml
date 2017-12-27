@@ -2,8 +2,6 @@ version: '3.2'
 
 services:
   save:
-    image: 'dhub.ncats.dhs.gov:5001/saver'
+    image: 'dhub.ncats.dhs.gov:5001/saver:latest'
     volumes:
       - /tmp:/home/saver/shared
-    dns:
-     - 8.8.8.8

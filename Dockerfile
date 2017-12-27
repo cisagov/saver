@@ -3,9 +3,12 @@ MAINTAINER Shane Frasier <jeremy.frasier@beta.dhs.gov>
 ###
 # Install shadow, so we have adduser and addgroup.  We can remove the
 # package once we're finished with it.
+#
+# We also need redis so we can use redis-cli to communicate with
+# redis.
 ###
 RUN apk update && \
-    apk add shadow
+    apk add redis shadow
 
 ###
 # Dependencies
