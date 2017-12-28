@@ -165,11 +165,10 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         #
         # Note that the date/time strings returned by sslyze are UTC:
         # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
-        # They are also in the format YYYY-MM-DD HH:MM:SS:
-        # https://github.com/nabla-c0d3/sslyze/blob/master/sslyze/plugins/certificate_info_plugin.py#L517-L523
+        # They are also in the format YYYY-MM-DDTHH:MM:SS.
         for index in (21, 22):
             if row[index]:
-                row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
+                row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%dT%H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
             else:
                 row[index] = None
 
