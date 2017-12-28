@@ -130,8 +130,11 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             continue
 
         # Fix up the integer entries
-        for index in (10, 15):
-            if row[index]:  # row[10] = weakest_dh_group_size, row[15] = key_length
+        #
+        # row[3] = scanned port, row[12] = weakest_dh_group_size, row[17] =
+        # key_length
+        for index in (3, 12, 17):
+            if row[index]:
                 row[index] = int(row[index])
             else:
                 row[index] = -1  # -1 means null
@@ -150,7 +153,7 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             id = agency
 
         # Convert 'True'/'False' strings to boolean values (or None)
-        for boolean_item in (3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 17, 18):
+        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 19, 20):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -164,7 +167,7 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
         # They are also in the format YYYY-MM-DD HH:MM:SS:
         # https://github.com/nabla-c0d3/sslyze/blob/master/sslyze/plugins/certificate_info_plugin.py#L517-L523
-        for index in (19, 20):
+        for index in (21, 22):
             if row[index]:
                 row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
             else:
@@ -176,27 +179,29 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             'agency': agency,
             'agency_id': id,
             'scanned_hostname': row[2],
-            'sslv2': row[3],
-            'sslv3': row[4],
-            'tlsv1_0': row[5],
-            'tlsv1_1': row[6],
-            'tlsv1_2': row[7],
-            'any_forward_secrecy': row[8],
-            'all_forward_secrecy': row[9],
-            'weakest_dh_group_size': row[10],
-            'any_rc4': row[11],
-            'all_rc4': row[12],
-            'any_3des': row[13],
-            'key_type': row[14],
-            'key_length': row[15],
-            'signature_algorithm': row[16],
-            'sha1_in_served_chain': row[17],
-            'sha1_in_construsted_chain': row[18],
-            'not_before': row[19],
-            'not_after': row[20],
-            'highest_served_issuer': row[21],
-            'highest_constructed_issuer': row[22],
-            'errors': row[23],
+            'scanned_port': row[3],
+            'starttls_smtp': row[4],
+            'sslv2': row[5],
+            'sslv3': row[6],
+            'tlsv1_0': row[7],
+            'tlsv1_1': row[8],
+            'tlsv1_2': row[9],
+            'any_forward_secrecy': row[10],
+            'all_forward_secrecy': row[11],
+            'weakest_dh_group_size': row[12],
+            'any_rc4': row[13],
+            'all_rc4': row[14],
+            'any_3des': row[15],
+            'key_type': row[16],
+            'key_length': row[17],
+            'signature_algorithm': row[18],
+            'sha1_in_served_chain': row[19],
+            'sha1_in_construsted_chain': row[20],
+            'not_before': row[21],
+            'not_after': row[22],
+            'highest_served_issuer': row[23],
+            'highest_constructed_issuer': row[24],
+            'errors': row[25],
             'cyhy_stakeholder': agency not in noncyhy,
             'scan_date': date_today,
             'latest': True
