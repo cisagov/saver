@@ -156,11 +156,10 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             else:
                 row[boolean_item] = None
 
-        db.https_scan.insert_one(
-            {"domain": row[0],
+        db.https_scan.insert_one({
+            "domain": row[0],
             "base_domain": row[1],
-            "agency": agency,
-            "agency_id": id,
+            'agency': {'id':id, 'name':agency},
             "canonical_url": row[2],
             "live": row[3],
             "redirect": row[4],
@@ -187,7 +186,8 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             "unknown_error": row[25],
             "cyhy_stakeholder": agency not in noncyhy,
             "scan_date": date_today,
-            "latest": True})
+            "latest": True
+        })
         domains_processed += 1
 
     print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))

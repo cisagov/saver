@@ -145,33 +145,33 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             else:
                 row[boolean_item] = None
 
-        db.trustymail.insert_one(
-    		{'domain': row[0],
-    		'base_domain':row[1],
-    		'agency': {'id':id, 'name':agency},
-    		'live': row[2],
-    		'mx_record': row[3],
-    		'mail_servers': row[4],
+        db.trustymail.insert_one({
+            'domain': row[0],
+            'base_domain':row[1],
+            'agency': {'id':id, 'name':agency},
+            'live': row[2],
+            'mx_record': row[3],
+            'mail_servers': row[4],
             'mail_server_ports_tested': row[5],
             'domain_supports_smtp': row[6],
             'domain_supports_smtp_results': row[7],
             'domain_supports_starttls': row[8],
             'domain_supports_starttls_results': row[9],
-    		'spf_record': row[10],
-    		'valid_spf':row[11],
-    		'spf_results':row[12],
-    		'dmarc_record':row[13],
-    		'valid_dmarc':row[14],
-    		'dmarc_results':row[15],
-    		'dmarc_record_base_domain':row[16],
-    		'valid_dmarc_base_domain':row[17],
-    		'dmarc_results_base_domain':row[18],
-    		'dmarc_policy':row[19],
-    		'syntax_errors':row[20],
+            'spf_record': row[10],
+            'valid_spf':row[11],
+            'spf_results':row[12],
+            'dmarc_record':row[13],
+            'valid_dmarc':row[14],
+            'dmarc_results':row[15],
+            'dmarc_record_base_domain':row[16],
+            'valid_dmarc_base_domain':row[17],
+            'dmarc_results_base_domain':row[18],
+            'dmarc_policy':row[19],
+            'syntax_errors':row[20],
             'debug_info':row[21],
             'scan_date':date_today,
             'latest':True
-    		})
+    	})
         domains_processed += 1
 
     print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))

@@ -175,8 +175,7 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         db.sslyze_scan.insert_one({
             'domain': row[0],
             'base_domain': row[1],
-            'agency': agency,
-            'agency_id': id,
+            'agency': {'id':id, 'name':agency},
             'scanned_hostname': row[2],
             'scanned_port': row[3],
             'starttls_smtp': row[4],
