@@ -17,6 +17,9 @@ do
 done
 echo "Scanner finished"
 
+# No longer needed
+redis-cli -h orchestrator_redis_1 del scanning_complete
+
 # Process scan results and import them to the database
 echo 'Processing results...'
 ./pshtt_csv2mongo.py
@@ -42,5 +45,4 @@ echo 'Cleaning up'
 rm -rf artifacts_$TODAY
 
 # Let redis know we're done
-redis-cli -h orchestrator_redis_1 del scanning_complete
 redis-cli -h orchestrator_redis_1 set saving_complete true
