@@ -45,4 +45,6 @@ echo 'Cleaning up'
 rm -rf artifacts_$TODAY
 
 # Let redis know we're done
-redis-cli -h orchestrator_redis_1 set saving_complete true
+# redis-cli -h orchestrator_redis_1 set saving_complete true
+# This is the end of the line, so tell redis to shutdown
+redis-cli -h orchestrator_redis_1 shutdown
