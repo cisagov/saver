@@ -8,8 +8,7 @@ MAINTAINER Shane Frasier <jeremy.frasier@beta.dhs.gov>
 # also reinstall wget with openssl, since otherwise wget does not seem
 # to know how to HTTPS.
 ###
-RUN apk update && \
-    apk add wget openssl redis shadow
+RUN apk --no-cache add wget openssl redis shadow
 
 ###
 # Dependencies
@@ -24,7 +23,7 @@ RUN addgroup -S saver \
     && adduser -S -g "Saver user" -G saver saver
 
 # Remove build dependencies
-RUN apk del shadow
+RUN apk --no-cache del shadow
 
 # Put this just before we change users because the copy (and every
 # step after it) will always be rerun by docker, but we need to be
