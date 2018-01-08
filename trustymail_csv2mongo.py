@@ -123,6 +123,15 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         if row[0] == 'Domain':
             continue
 
+        # Fix up the integer entries
+        #
+        # row[20] = DMARC policy percentage
+        for index in (20):
+            if row[index]:
+                row[index] = int(row[index])
+            else:
+                row[index] = -1  # -1 means null
+
         # Match base_domain
         for domain in domain_list:
             if domain.domain == row[1]:
@@ -137,7 +146,7 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             id = agency
 
         # Convert "True"/"False" strings to boolean values (or None)
-        for boolean_item in (2, 3, 6, 8, 10, 11, 13, 14, 16, 17):
+        for boolean_item in (2, 3, 6, 8, 10, 11, 13, 14, 16, 17, 23, 24):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -167,8 +176,13 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             'valid_dmarc_base_domain':row[17],
             'dmarc_results_base_domain':row[18],
             'dmarc_policy':row[19],
-            'syntax_errors':row[20],
-            'debug_info':row[21],
+            'dmarc_policy_percentage':row[20],
+            'aggregate_report_uris':row[21],
+            'forensic_report_uris':row[22],
+            'has_aggregate_report_uris':row[23],
+            'has_forensic_report_uris':row[24],
+            'syntax_errors':row[25],
+            'debug_info':row[26],
             'scan_date':date_today,
             'latest':True
     	})
