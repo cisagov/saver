@@ -126,7 +126,7 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         # Fix up the integer entries
         #
         # row[20] = DMARC policy percentage
-        for index in (20):
+        for index in (20,):
             if row[index]:
                 row[index] = int(row[index])
             else:
