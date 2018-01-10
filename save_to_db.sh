@@ -29,8 +29,8 @@ rm $SHARED_DIR/artifacts/clean-current-federal.csv
 rm $SHARED_DIR/artifacts/unique-agencies.csv
 rm $SHARED_DIR/artifacts/clean-current-federal.csv
 ./sslyze_csv2mongo.py
-rm $SHARED_DIR/artifacts/unique-agencies.csv
-rm $SHARED_DIR/artifacts/clean-current-federal.csv
+# Leave a copy of unique-agencies.csv and clean-current-federal.csv
+# since the report tool will need it
 
 # Let redis know we're done
 redis-cli -h orchestrator_redis_1 set saving_complete true
