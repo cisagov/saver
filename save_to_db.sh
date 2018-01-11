@@ -22,29 +22,15 @@ redis-cli -h orchestrator_redis_1 del scanning_complete
 
 # Process scan results and import them to the database
 echo 'Processing results...'
-./pshtt_csv2mongo.py
-rm $SHARED_DIR/artifacts/unique-agencies.csv
-rm $SHARED_DIR/artifacts/clean-current-federal.csv
+# ./pshtt_csv2mongo.py
+# rm $SHARED_DIR/artifacts/unique-agencies.csv
+# rm $SHARED_DIR/artifacts/clean-current-federal.csv
 ./trustymail_csv2mongo.py
 rm $SHARED_DIR/artifacts/unique-agencies.csv
 rm $SHARED_DIR/artifacts/clean-current-federal.csv
 ./sslyze_csv2mongo.py
-rm $SHARED_DIR/artifacts/unique-agencies.csv
-rm $SHARED_DIR/artifacts/clean-current-federal.csv
-
-# Clean up
-echo 'Archiving results...'
-mkdir -p $SHARED_DIR/archive/
-cd $SHARED_DIR
-TODAY=$(date +'%Y-%m-%d')
-mv artifacts artifacts_$TODAY
-tar -czf $SHARED_DIR/archive/artifacts_$TODAY.tar.gz artifacts_$TODAY/
-
-# Clean up
-echo 'Cleaning up'
-rm -rf artifacts_$TODAY
+# Leave a copy of unique-agencies.csv and clean-current-federal.csv
+# since the report tool will need it
 
 # Let redis know we're done
-# redis-cli -h orchestrator_redis_1 set saving_complete true
-# This is the end of the line, so tell redis to shutdown
-redis-cli -h orchestrator_redis_1 shutdown
+redis-cli -h orchestrator_redis_1 set saving_complete true
