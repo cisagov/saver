@@ -22,9 +22,9 @@ redis-cli -h orchestrator_redis_1 del scanning_complete
 
 # Process scan results and import them to the database
 echo 'Processing results...'
-# ./pshtt_csv2mongo.py
-# rm $SHARED_DIR/artifacts/unique-agencies.csv
-# rm $SHARED_DIR/artifacts/clean-current-federal.csv
+./pshtt_csv2mongo.py
+rm $SHARED_DIR/artifacts/unique-agencies.csv
+rm $SHARED_DIR/artifacts/clean-current-federal.csv
 ./trustymail_csv2mongo.py
 rm $SHARED_DIR/artifacts/unique-agencies.csv
 rm $SHARED_DIR/artifacts/clean-current-federal.csv
