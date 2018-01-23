@@ -154,9 +154,38 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             else:
                 row[boolean_item] = None
 
+        # Split the rua and ruf addresses into arrays of dictionaries
+        def split_rua_or_ruf(text):
+            """Split an rua or ruf into the URI and modifier, if any.
+
+            See section 6.2 of the RFC for details on the format
+            (https://tools.ietf.org/html/rfc7489).
+
+            Parameters
+            ----------
+            text : str
+                The rua or ruf string to be split into its constituent
+                parts.
+
+            Returns
+            -------
+            dict: The rua or ruf aplit into its URI and modifier, if
+            any.
+            """
+            pieces = text.split('!')
+            uri = pieces[0]
+            modifier = None
+            if len(pieces) > 1:
+                modifier = pieces[1]
+            return {'uri': uri, 'modifier': modifier}
+            
+        ruas = [split_rua_or_ruf(rua) for rua in row[21].split(',')]
+        rufs = [split_rua_or_ruf(ruf) for ruf in row[22].split(',')]
+
         db.trustymail.insert_one({
             'domain': row[0],
             'base_domain':row[1],
+            'is_base_domain': row[0] == row[1],
             'agency': {'id':id, 'name':agency},
             'live': row[2],
             'mx_record': row[3],
@@ -167,24 +196,24 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             'domain_supports_starttls': row[8],
             'domain_supports_starttls_results': row[9],
             'spf_record': row[10],
-            'valid_spf':row[11],
-            'spf_results':row[12],
-            'dmarc_record':row[13],
-            'valid_dmarc':row[14],
-            'dmarc_results':row[15],
-            'dmarc_record_base_domain':row[16],
-            'valid_dmarc_base_domain':row[17],
-            'dmarc_results_base_domain':row[18],
-            'dmarc_policy':row[19],
-            'dmarc_policy_percentage':row[20],
-            'aggregate_report_uris':row[21],
-            'forensic_report_uris':row[22],
-            'has_aggregate_report_uri':row[23],
-            'has_forensic_report_uri':row[24],
-            'syntax_errors':row[25],
-            'debug_info':row[26],
-            'scan_date':date_today,
-            'latest':True
+            'valid_spf': row[11],
+            'spf_results': row[12],
+            'dmarc_record': row[13],
+            'valid_dmarc': row[14],
+            'dmarc_results': row[15],
+            'dmarc_record_base_domain': row[16],
+            'valid_dmarc_base_domain': row[17],
+            'dmarc_results_base_domain': row[18],
+            'dmarc_policy': row[19],
+            'dmarc_policy_percentage': row[20],
+            'aggregate_report_uris': ruas,
+            'forensic_report_uris': rufs,
+            'has_aggregate_report_uri': row[23],
+            'has_forensic_report_uri': row[24],
+            'syntax_errors': row[25],
+            'debug_info': row[26],
+            'scan_date': date_today,
+            'latest': True
     	})
         domains_processed += 1
 
