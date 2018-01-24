@@ -7,7 +7,7 @@ import sys
 import datetime
 from pymongo import MongoClient
 
-DB_CONFIG_FILE = '/run/secrets/trustymail_write_creds.yml'
+DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
