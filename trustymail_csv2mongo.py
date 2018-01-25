@@ -180,8 +180,8 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             return {'uri': uri, 'modifier': modifier}
 
         # The if clauses at the end drop empty strings
-        ruas = [split_rua_or_ruf(rua) for rua in row[21].split(',') if rua]
-        rufs = [split_rua_or_ruf(ruf) for ruf in row[22].split(',') if ruf]
+        ruas = [split_rua_or_ruf(rua.strip()) for rua in row[21].split(',') if rua]
+        rufs = [split_rua_or_ruf(ruf.strip()) for ruf in row[22].split(',') if ruf]
 
         db.trustymail.insert_one({
             'domain': row[0],
