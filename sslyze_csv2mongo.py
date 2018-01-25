@@ -7,7 +7,7 @@ import datetime
 from pymongo import MongoClient
 from pytz import timezone
 
-DB_CONFIG_FILE = '/run/secrets/sslyze_write_creds.yml'
+DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
