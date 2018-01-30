@@ -129,6 +129,13 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
         if row[0] == 'Domain':
             continue
 
+        # Because of the way domain-scan works, if a domain does not need to be
+        # scanned because pshtt and trustymail have determined that there are
+        # no web or mail servers, then a row of null data is output.  We should
+        # skip such rows.  Such rows have a null for the "scanned port" field.
+        if not row[3]:
+            continue
+
         # Fix up the integer entries
         #
         # row[3] = scanned port, row[12] = weakest_dh_group_size, row[17] =
