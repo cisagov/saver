@@ -2,14 +2,6 @@
 
 SHARED_DIR='/home/saver/shared'
 
-# We need a copy of current-federal so we download a copy of just
-# that.  We need the raw file, and domain-scan/gather modifies the
-# fields in the CSV, so we'll use wget here.
-mkdir -p $SHARED_DIR/artifacts/
-wget https://raw.githubusercontent.com/GSA/data/master/dotgov-domains/current-federal.csv \
-     -O current-federal.csv
-mv current-federal.csv $SHARED_DIR/artifacts/current-federal-original.csv
-
 echo 'Waiting for scanner'
 while [ "$(redis-cli -h orchestrator_redis_1 get scanning_complete)" != "true" ]
 do
