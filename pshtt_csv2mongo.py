@@ -14,7 +14,7 @@ REWRITES_FILE = INCLUDE_DATA_DIR + 'rewrites.csv'
 NON_CYHY_STAKEHOLDERS_FILE = INCLUDE_DATA_DIR + 'noncyhy.csv'
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
 
-CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal-original.csv'
+CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal_modified.csv'
 UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + 'artifacts/unique-agencies.csv'
 CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.csv'
 
