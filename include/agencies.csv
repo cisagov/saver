@@ -1,6 +1,5 @@
 Administrative Conference of the United States,ACUS
 Advisory Council on Historic Preservation,ACHP
-African Development Foundation,USADF
 American Battle Monuments Commission,ABMC
 AMTRAK,AMTRAK
 Appalachian Regional Commission,APPRC
@@ -10,13 +9,12 @@ Armed Forces Retirement Home,Armed Forces Retirement Home
 Central Intelligence Agency,Central Intelligence Agency
 Christopher Columbus Fellowship Foundation,Christopher Columbus Fellowship Foundation
 Civil Air Patrol,CAP
-Commission of Fine Arts,CFA
 Commodity Futures Trading Commission,CFTC
 Congressional Office of Compliance,Congressional Office of Compliance
 Consumer Financial Protection Bureau,CFPB
 Consumer Product Safety Commission,CPSC
 Corporation for National and Community Service,CNCS
-Council of the Inspectors General on Integrity and Efficiency,CIGIE
+Council of Inspectors General on Integrity and Efficiency,CIGIE
 Court Services and Offender Supervision,CSOSA
 Defense Nuclear Facilities Safety Board,DNFSB
 Delta Regional Authority,Delta Regional Authority
@@ -27,11 +25,11 @@ Department of Education,ED
 Department of Energy,DOE
 Department of Health and Human Services,HHS
 Department of Homeland Security,DHS
-Department of Housing And Urban Development,HUD
+Department of Housing and Urban Development,HUD
 Department of Justice,DOJ
 Department of Labor,DOL
 Department of State,DOS
-Department of State OIG,DOSOIG
+Department of State Office of Inspector General,DOSOIG
 Department of the Interior,DOI
 Department of the Treasury,Treasury
 Department of Transportation,DOT
@@ -44,7 +42,7 @@ Export Import Bank of the U.S.,EXIM
 Farm Credit Administration,FCA
 Federal Communications Commission,FCC
 Federal Deposit Insurance Corporation,FDIC
-Federal Elections Commission,FEC
+Federal Election Commission,FEC
 Federal Energy Regulatory Commission,FERC
 Federal Housing Finance Agency,FHFA
 Federal Housing Finance Agency Office of Inspector General,FHFAOIG
@@ -94,9 +92,8 @@ Occupational Safety and Health Review Commission,OSHRC
 Office of Government Ethics,OGE
 Office of Personnel Management,OPM
 Overseas Private Investment Corporation,OPIC
-Peace Corps,PC
 Pension Benefit Guaranty Corporation,PBGC
-Postal Rate Commission,PRC
+Postal Regulatory Commission,PRC
 Railroad Retirement Board,RRB
 Securities and Exchange Commission,SEC
 Selective Service System,SSS
@@ -104,7 +101,7 @@ Small Business Administration,SBA
 Smithsonian Institution,SI
 Social Security Administration,SSA
 Social Security Advisory Board,SSAB
-State Justice Institute (SJI),SJI
+State Justice Institute,SJI
 Surface Transportation Board,STB
 Stennis Center for Public Service,Stennis Center for Public Service
 Tennessee Valley Authority,TVA
@@ -115,20 +112,21 @@ The Legislative Branch,HOR
 The Supreme Court,The Supreme Court
 The United States World War One Centennial Commission,The United States World War One Centennial Commission
 United States Global Change Research Program,United States Global Change Research Program
-United States AbilityOne Commission,ABLTYONE
+United States AbilityOne,ABLTYONE
 United States Access Board,USAB
 United States African Development Foundation,USADF
 United States Holocaust Memorial Museum,USHMM
 United States Interagency Council on Homelessness,USICH
 United States International Trade Commission,USITC
-United States Office of Government Ethics,United States Office of Government Ethics
 United States Postal Service,USPS
 United States Postal Service Office of Inspector General,USPSOIG
 United States Trade and Development Agency,USTDA
 U.S. Agency for International Development,USAID
 U.S. Capitol Police,U.S. Capitol Police
 U.S. Chemical Safety and Hazard Investigation Board,CSHIB
+U.S. Commission of Fine Arts,CFA
 U.S. Commission on Civil Rights,U.S. Commission on Civil Rights
 U.S. Courts,U.S. Courts
 U.S. Department of Agriculture,USDA
-Office of Special Counsel,OSC
+U.S. Office of Special Counsel,OSC
+U.S. Peace Corps,PC
