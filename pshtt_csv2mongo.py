@@ -10,7 +10,6 @@ DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
-NON_CYHY_STAKEHOLDERS_FILE = INCLUDE_DATA_DIR + 'noncyhy.csv'
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
 
 CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal_modified.csv'
@@ -29,22 +28,16 @@ class Domainagency():
 
 def main():
     opened_files = open_csv_files()
-    store_data(opened_files[0], opened_files[1],
-               opened_files[2], DB_CONFIG_FILE)
+    store_data(opened_files[0], opened_files[1], DB_CONFIG_FILE)
 
 
 def open_csv_files():
     current_federal = open(CURRENT_FEDERAL_FILE)
     agencies = open(AGENCIES_FILE)
     unique_agencies = open(UNIQUE_AGENCIES_FILE, "w+")
-    non_stakeholders = open(NON_CYHY_STAKEHOLDERS_FILE)
 
     # Create a writer so we have a list of our unique agencies
     writer = csv.writer(unique_agencies, delimiter=",")
-
-    noncyhy = {}
-    for row in csv.reader(non_stakeholders):
-        noncyhy[row[0]] = row[1]
 
     # Get the cleaned current-federal
     clean_federal = []
@@ -54,10 +47,6 @@ def open_csv_files():
             continue
         domain = row[0]
         agency = row[2].replace("&", "and").replace("/", " ").replace("U. S.", "U.S.").replace(",", "")
-
-        # Noncyhy dict contains some rewrites for non cyhy agencies.
-        if agency in noncyhy:
-            agency = noncyhy[agency]
 
         # Store the unique agencies that we see
         unique.add(agency)
@@ -81,7 +70,7 @@ def open_csv_files():
     for line in clean_federal:
         writer.writerow(line)
 
-    return clean_federal, agency_dict, noncyhy.values()
+    return clean_federal, agency_dict
 
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
@@ -98,7 +87,7 @@ def db_from_config(config_filename):
     return db
 
 
-def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
+def store_data(clean_federal, agency_dict, db_config_file):
     date_today = datetime.datetime.combine(datetime.datetime.utcnow(), datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(PSHTT_RESULTS_FILE)
@@ -175,7 +164,6 @@ def store_data(clean_federal, agency_dict, noncyhy, db_config_file):
             "domain_enforces_https": row[23],
             "domain_uses_strong_hsts": row[24],
             "unknown_error": row[25],
-            "cyhy_stakeholder": agency not in noncyhy,
             "scan_date": date_today,
             "latest": True
         })
