@@ -9,7 +9,6 @@ Armed Forces Retirement Home,Armed Forces Retirement Home
 Central Intelligence Agency,Central Intelligence Agency
 Christopher Columbus Fellowship Foundation,Christopher Columbus Fellowship Foundation
 Civil Air Patrol,CAP
-Commission of Fine Arts,CFA
 Commodity Futures Trading Commission,CFTC
 Congressional Office of Compliance,Congressional Office of Compliance
 Consumer Financial Protection Bureau,CFPB
@@ -30,7 +29,7 @@ Department of Housing and Urban Development,HUD
 Department of Justice,DOJ
 Department of Labor,DOL
 Department of State,DOS
-"Department of State, Office of Inspector General",DOSOIG
+Department of State Office of Inspector General,DOSOIG
 Department of the Interior,DOI
 Department of the Treasury,Treasury
 Department of Transportation,DOT
@@ -43,10 +42,10 @@ Export Import Bank of the U.S.,EXIM
 Farm Credit Administration,FCA
 Federal Communications Commission,FCC
 Federal Deposit Insurance Corporation,FDIC
-Federal Elections Commission,FEC
+Federal Election Commission,FEC
 Federal Energy Regulatory Commission,FERC
 Federal Housing Finance Agency,FHFA
-"Federal Housing Finance Agency, Office of Inspector General",FHFAOIG
+Federal Housing Finance Agency Office of Inspector General,FHFAOIG
 Federal Labor Relations Authority,FLRA
 Federal Maritime Commission,FMC
 Federal Mediation and Conciliation Service,FMCS
@@ -93,7 +92,6 @@ Occupational Safety and Health Review Commission,OSHRC
 Office of Government Ethics,OGE
 Office of Personnel Management,OPM
 Overseas Private Investment Corporation,OPIC
-U.S. Peace Corps,PC
 Pension Benefit Guaranty Corporation,PBGC
 Postal Regulatory Commission,PRC
 Railroad Retirement Board,RRB
@@ -114,20 +112,21 @@ The Legislative Branch,HOR
 The Supreme Court,The Supreme Court
 The United States World War One Centennial Commission,The United States World War One Centennial Commission
 United States Global Change Research Program,United States Global Change Research Program
-United States AbilityOne Commission,ABLTYONE
+United States AbilityOne,ABLTYONE
 United States Access Board,USAB
 United States African Development Foundation,USADF
 United States Holocaust Memorial Museum,USHMM
 United States Interagency Council on Homelessness,USICH
 United States International Trade Commission,USITC
-United States Office of Government Ethics,United States Office of Government Ethics
 United States Postal Service,USPS
-"United States Postal Service, Office of Inspector General",USPSOIG
+United States Postal Service Office of Inspector General,USPSOIG
 United States Trade and Development Agency,USTDA
 U.S. Agency for International Development,USAID
 U.S. Capitol Police,U.S. Capitol Police
 U.S. Chemical Safety and Hazard Investigation Board,CSHIB
+U.S. Commission of Fine Arts,CFA
 U.S. Commission on Civil Rights,U.S. Commission on Civil Rights
 U.S. Courts,U.S. Courts
 U.S. Department of Agriculture,USDA
-Office of Special Counsel,OSC
+U.S. Office of Special Counsel,OSC
+U.S. Peace Corps,PC
