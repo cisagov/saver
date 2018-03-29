@@ -11,7 +11,6 @@ DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
-REWRITES_FILE = INCLUDE_DATA_DIR + 'rewrites.csv'
 NON_CYHY_STAKEHOLDERS_FILE = INCLUDE_DATA_DIR + 'noncyhy.csv'
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
 
@@ -33,7 +32,6 @@ def main():
     store_data(opened_files[0], opened_files[1], opened_files[2], DB_CONFIG_FILE)
 
 def open_csv_files():
-    rewrites = open(REWRITES_FILE)
     non_stakeholders = open(NON_CYHY_STAKEHOLDERS_FILE)
     agencies = open(AGENCIES_FILE)
     current_federal = open(CURRENT_FEDERAL_FILE)
@@ -41,11 +39,6 @@ def open_csv_files():
     unique_agencies = open(UNIQUE_AGENCIES_FILE, 'w+')
     # Create a writer so we have a list of our unique agencies
     writer = csv.writer(unique_agencies, delimiter=',')
-
-    # Create a dictionary for rewrites.
-    rewrite_dict = {}
-    for row in csv.reader(rewrites):
-        rewrite_dict[row[0]] = row[1]
 
     noncyhy = {}
     for row in csv.reader(non_stakeholders):
@@ -59,9 +52,6 @@ def open_csv_files():
             continue
         domain = row[0]
         agency = row[2].replace('&', 'and').replace('/', ' ').replace('U. S.', 'U.S.').replace(',', '')
-
-        for key in rewrite_dict:
-            agency = agency.replace(key.strip(), rewrite_dict[key])
 
         # Noncyhy dict contains some rewrites for non cyhy agencies.
         if agency in noncyhy:
