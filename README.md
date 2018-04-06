@@ -1,5 +1,7 @@
 # NCATS pshtt, trustymail, and sslyze Saver :floppy_disk: #
 
+[![Build Status](https://travis-ci.org/dhs-ncats/saver.svg?branch=master)](https://travis-ci.org/dhs-ncats/saver)
+
 This is a Docker container for saving to a [Mongo
 database](https://www.mongodb.com/)
 [pshtt](https://github.com/dhs-ncats/pshtt),
