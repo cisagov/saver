@@ -139,7 +139,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert 'True'/'False' strings to boolean values (or None)
-        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 21, 21, 27):
+        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 20, 21, 27):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
