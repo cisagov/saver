@@ -117,9 +117,9 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
         # Fix up the integer entries
         #
-        # row[3] = scanned port, row[12] = weakest_dh_group_size, row[17] =
+        # row[3] = scanned port, row[13] = weakest_dh_group_size, row[18] =
         # key_length
-        for index in (3, 12, 17):
+        for index in (3, 13, 18):
             if row[index]:
                 row[index] = int(row[index])
             else:
@@ -139,7 +139,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert 'True'/'False' strings to boolean values (or None)
-        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 19, 20):
+        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 20, 21, 27):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -188,6 +188,8 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'highest_served_issuer': row[24],
             'highest_constructed_issuer': row[25],
             'errors': row[26],
+            'is_symantec_cert': row[27],
+            'symantec_distrust_date': row[28],
             'scan_date': date_today,
             'latest': True
         })
