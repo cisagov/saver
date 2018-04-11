@@ -152,7 +152,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # Note that the date/time strings returned by sslyze are UTC:
         # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
         # They are also in the format YYYY-MM-DDTHH:MM:SS.
-        for index in (21, 22):
+        for index in (22, 23):
             if row[index]:
                 row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%dT%H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
             else:
@@ -187,9 +187,10 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'not_after': row[23],
             'highest_served_issuer': row[24],
             'highest_constructed_issuer': row[25],
-            'errors': row[26],
-            'is_symantec_cert': row[27],
-            'symantec_distrust_date': row[28],
+            # I'm omitting some fields related to extended validation
+            'is_symantec_cert': row[30],
+            'symantec_distrust_date': row[31],
+            'errors': row[32],
             'scan_date': date_today,
             'latest': True
         })
