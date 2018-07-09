@@ -117,9 +117,8 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
         # Fix up the integer entries
         #
-        # row[3] = scanned port, row[13] = weakest_dh_group_size, row[18] =
-        # key_length
-        for index in (3, 13, 18):
+        # row[3] = scanned port, row[17] = key_length
+        for index in (3, 17):
             if row[index]:
                 row[index] = int(row[index])
             else:
@@ -139,7 +138,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert 'True'/'False' strings to boolean values (or None)
-        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 20, 21, 30):
+        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19, 20, 29):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -152,7 +151,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # Note that the date/time strings returned by sslyze are UTC:
         # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
         # They are also in the format YYYY-MM-DDTHH:MM:SS.
-        for index in (22, 23):
+        for index in (21, 22):
             if row[index]:
                 row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%dT%H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
             else:
@@ -174,23 +173,22 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'tlsv1_3': row[10],
             'any_forward_secrecy': row[11],
             'all_forward_secrecy': row[12],
-            'weakest_dh_group_size': row[13],
-            'any_rc4': row[14],
-            'all_rc4': row[15],
-            'any_3des': row[16],
-            'key_type': row[17],
-            'key_length': row[18],
-            'signature_algorithm': row[19],
-            'sha1_in_served_chain': row[20],
-            'sha1_in_construsted_chain': row[21],
-            'not_before': row[22],
-            'not_after': row[23],
-            'highest_served_issuer': row[24],
-            'highest_constructed_issuer': row[25],
+            'any_rc4': row[13],
+            'all_rc4': row[14],
+            'any_3des': row[15],
+            'key_type': row[16],
+            'key_length': row[17],
+            'signature_algorithm': row[18],
+            'sha1_in_served_chain': row[19],
+            'sha1_in_construsted_chain': row[20],
+            'not_before': row[21],
+            'not_after': row[22],
+            'highest_served_issuer': row[23],
+            'highest_constructed_issuer': row[24],
             # I'm omitting some fields related to extended validation
-            'is_symantec_cert': row[30],
-            'symantec_distrust_date': row[31],
-            'errors': row[32],
+            'is_symantec_cert': row[29],
+            'symantec_distrust_date': row[30],
+            'errors': row[31],
             'scan_date': date_today,
             'latest': True
         })
