@@ -10,10 +10,13 @@ MAINTAINER Shane Frasier <jeremy.frasier@beta.dhs.gov>
 ###
 RUN apk --no-cache add wget openssl redis shadow
 
+# Upgrade pip and setuptools
+RUN pip3 install --upgrade pip setuptools
+
 ###
 # Dependencies
 ###
-RUN pip3 install pymongo pytz pyyaml
+RUN pip3 install --upgrade pymongo pytz pyyaml
 
 ###
 # Create unprivileged user
