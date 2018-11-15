@@ -3,14 +3,14 @@
 SHARED_DIR='/home/saver/shared'
 
 echo 'Waiting for scanner'
-while [ "$(redis-cli -h orchestrator_redis_1 get scanning_complete)" != "true" ]
+while [ "$(redis-cli -h redis get scanning_complete)" != "true" ]
 do
     sleep 5
 done
 echo "Scanner finished"
 
 # No longer needed
-redis-cli -h orchestrator_redis_1 del scanning_complete
+redis-cli -h redis del scanning_complete
 
 # Process scan results and import them to the database
 echo 'Processing results...'
@@ -25,4 +25,4 @@ rm $SHARED_DIR/artifacts/clean-current-federal.csv
 # since the report tool will need it
 
 # Let redis know we're done
-redis-cli -h orchestrator_redis_1 set saving_complete true
+redis-cli -h redis set saving_complete true
