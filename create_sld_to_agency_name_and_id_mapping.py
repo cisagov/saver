@@ -34,10 +34,17 @@ def main():
         csvreader = csv.reader(agencies_file)
         agency_mapping = {row[0]: row[1] for row in csvreader}
 
+    # Set up the scan database connection
+    db = db_from_config(DB_CONFIG_FILE)
+
     # Import the current-federal data and create the records to be
-    # inserted into the database
+    # inserted into the database.
+    #
+    # I hate using update_one() in a loop like this.  Once we move to
+    # Mongo 4 we can use a transaction to atomically (1) drop all the
+    # rows from the collection and (2) use insert_many() to insert all
+    # the new data.  That will be much cleaner!
     now = datetime.datetime.utcnow()
-    records = []
     with open(CURRENT_FEDERAL_FILE, 'r', newline='') as current_federal_file:
         csvreader = csv.DictReader(current_federal_file)
         for row in csvreader:
@@ -55,7 +62,7 @@ def main():
                 cyhy_id = agency_mapping[agency]
                 is_cyhy_stakeholder = True
 
-            records.append({
+            record = {
                 'domain': domain,
                 'agency': {
                     'id': cyhy_id,
@@ -63,27 +70,31 @@ def main():
                 },
                 'cyhy_stakeholder': is_cyhy_stakeholder,
                 'scan_date': now
-            })
+            }
 
-    # Set up the scan database connection
-    db = db_from_config(DB_CONFIG_FILE)
+            # Add this result to the database via an upsert
+            res = db.domains.update_one({
+                'domain': domain
+            }, {
+                '$set': record
+            }, upsert=True)
 
-    # Drop all previous documents from domains collection
-    #
-    # It would be great to check the return code here, but I don't see
-    # anything of use in DeleteResult:
-    # http://api.mongodb.com/python/current/api/pymongo/results.html#pymongo.results.DeleteResult
-    db.domains.delete_many({})
+            if not res.acknowledged:
+                print(f'Unable to write new SLD record for {domain} to '
+                      f'"{db.name}" database on {db.client.address[0]}.')
 
-    # Now add our new results
-    res = db.domains.insert_many(records)
-    if len(res.inserted_ids) != len(records):
-        print(f'Unable to write new SLD records from "{db.name}" '
-              f'database on {db.client.address[0]}')
-        return
-
-    print(f'Successfully imported {len(records)} SLDs to "{db.name}" '
-          f'database on {db.client.address[0]}')
+    # Now delete any entries whose scan_date is not now
+    res = db.domains.delete_many({
+        'scan_date': {
+            '$ne': now
+        }
+    })
+    if not res.acknowledged:
+        print(f'Unable to delete old SLD records in "{db.name}" database '
+              f'on {db.client.address[0]}.')
+    else:
+        print(f'Deleted {res.deleted_count} old SLD records from '
+              f'"{db.name}" database on {db.client.address[0]}.')
 
 
 if __name__ == '__main__':
