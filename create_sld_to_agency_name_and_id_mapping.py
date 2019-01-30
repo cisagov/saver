@@ -5,7 +5,8 @@ import yaml
 
 from pymongo import MongoClient
 
-DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
+SCAN_DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
+CYHY_DB_CONFIG_FILE = '/run/secrets/cyhy_read_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
@@ -21,7 +22,7 @@ def db_from_config(config_filename):
         db_uri = config['database']['uri']
         db_name = config['database']['name']
     except:
-        print('Incorrect database config file format: {}'.format(config_filename))
+        print(f'Incorrect database config file format: {config_filename}')
 
     db_connection = MongoClient(host=db_uri, tz_aware=True)
     db = db_connection[db_name]
@@ -33,6 +34,9 @@ def main():
     with open(AGENCIES_FILE, 'r', newline='') as agencies_file:
         csvreader = csv.reader(agencies_file)
         agency_mapping = {row[0]: row[1] for row in csvreader}
+
+    # Set up the cyhy database connection
+    cyhy_db = db_from_config(CYHY_DB_CONFIG_FILE)
 
     # Import the current-federal data and create the records to be
     # inserted into the database
@@ -50,8 +54,18 @@ def main():
             cyhy_id = agency
             is_cyhy_stakeholder = False
             if agency in agency_mapping:
+                # The agency is in the agency mapping file, so it is
+                # mapped to a CyHy stakeholder
                 cyhy_id = agency_mapping[agency]
                 is_cyhy_stakeholder = True
+            else:
+                # There are cases where an agency is not in the agency
+                # mapping file because its name as listed in
+                # current-federal is identical to its CyHy ID.  (See
+                # AMTRAK, for instance.)  In that case
+                # is_cyhy_stakeholder needs to be set to true.
+                if cyhy_db.requests.count_documents({'_id': agency}) != 0:
+                    is_cyhy_stakeholder = True
 
             records.append({
                 'domain': domain,
@@ -63,21 +77,25 @@ def main():
                 'scan_date': now
             })
 
-    # Set up database connection
-    db = db_from_config(DB_CONFIG_FILE)
+    # Set up the scan database connection
+    scan_db = db_from_config(SCAN_DB_CONFIG_FILE)
 
     # Drop all previous documents from domains collection
-    db.domains.delete_many({})
+    #
+    # It would be great to check the return code here, but I don't see
+    # anything of use in DeleteResult:
+    # http://api.mongodb.com/python/current/api/pymongo/results.html#pymongo.results.DeleteResult
+    scan_db.domains.delete_many({})
 
     # Now add our new results
-    res = db.domains.insert_many(records)
+    res = scan_db.domains.insert_many(records)
     if len(res.inserted_ids) != len(records):
-        print(f'Unable to write new SLD records from "{db.name}" '
-              f'database on {db.client.address[0]}')
+        print(f'Unable to write new SLD records from "{scan_db.name}" '
+              f'database on {scan_db.client.address[0]}')
         return
 
-    print(f'Successfully imported {len(records)} SLDs to "{db.name}" '
-          f'database on {db.client.address[0]}')
+    print(f'Successfully imported {len(records)} SLDs to "{scan_db.name}" '
+          f'database on {scan_db.client.address[0]}')
 
 
 if __name__ == '__main__':
