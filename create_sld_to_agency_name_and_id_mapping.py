@@ -63,7 +63,7 @@ def main():
                 is_cyhy_stakeholder = True
 
             record = {
-                'domain': domain,
+                '_id': domain,
                 'agency': {
                     'id': cyhy_id,
                     'name': agency
@@ -74,7 +74,7 @@ def main():
 
             # Add this result to the database via an upsert
             res = db.domains.update_one({
-                'domain': domain
+                '_id': domain
             }, {
                 '$set': record
             }, upsert=True)
