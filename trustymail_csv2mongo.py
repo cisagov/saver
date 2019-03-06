@@ -82,8 +82,10 @@ def db_from_config(config_filename):
     db = db_connection[db_name]
     return db
 
+
 def store_data(clean_federal, agency_dict, db_config_file):
-    date_today = datetime.datetime.combine(datetime.datetime.utcnow(), datetime.time.min)
+    date_today = datetime.datetime.combine(datetime.datetime.utcnow(),
+                                           datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(TRUSTYMAIL_RESULTS_FILE)
     csv_f = csv.reader(f)
@@ -94,9 +96,20 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.trustymail.update({'latest':True}, {'$set':{'latest':False}}, multi=True)
+    db.trustymail.update(
+        {
+            'latest': True
+        },
+        {
+            '$set': {
+                'latest': False
+            }
+        },
+        multi=True
+    )
 
-    print('Importing to "{}" database on {}...'.format(db.name, db.client.address[0]))
+    print('Importing to "{}" database on {}...'.format(db.name,
+                                                       db.client.address[0]))
     domains_processed = 0
     for row in sorted(csv_f):
         # Skip header row if present
@@ -160,14 +173,22 @@ def store_data(clean_federal, agency_dict, db_config_file):
             return {'uri': uri, 'modifier': modifier}
 
         # The if clauses at the end drop empty strings
-        ruas = [split_rua_or_ruf(rua.strip()) for rua in row[22].split(',') if rua]
-        rufs = [split_rua_or_ruf(ruf.strip()) for ruf in row[23].split(',') if ruf]
+        ruas = [
+            split_rua_or_ruf(rua.strip())
+            for rua in row[22].split(',')
+            if rua
+        ]
+        rufs = [
+            split_rua_or_ruf(ruf.strip())
+            for ruf in row[23].split(',')
+            if ruf
+        ]
 
         db.trustymail.insert_one({
             'domain': row[0],
-            'base_domain':row[1],
+            'base_domain': row[1],
             'is_base_domain': row[0] == row[1],
-            'agency': {'id':id, 'name':agency},
+            'agency': {'id': id, 'name': agency},
             'live': row[2],
             'mx_record': row[3],
             'mail_servers': row[4],
@@ -196,11 +217,14 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'debug_info': row[27],
             'scan_date': date_today,
             'latest': True
-    	})
+        })
         domains_processed += 1
 
-    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))
-    #import IPython; IPython.embed() #<<< BREAKPOINT >>>
+    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed,
+                                                                             db.name,
+                                                                             db.client.address[0]))
+    # import IPython; IPython.embed() #<<< BREAKPOINT >>>
+
 
 if __name__ == '__main__':
     main()
