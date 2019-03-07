@@ -82,8 +82,10 @@ def db_from_config(config_filename):
     db = db_connection[db_name]
     return db
 
+
 def store_data(clean_federal, agency_dict, db_config_file):
-    date_today = datetime.datetime.combine(datetime.datetime.utcnow(), datetime.time.min)
+    date_today = datetime.datetime.combine(datetime.datetime.utcnow(),
+                                           datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(TRUSTYMAIL_RESULTS_FILE)
     csv_f = csv.reader(f)
@@ -94,9 +96,20 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.trustymail.update({'latest':True}, {'$set':{'latest':False}}, multi=True)
+    db.trustymail.update(
+        {
+            'latest': True
+        },
+        {
+            '$set': {
+                'latest': False
+            }
+        },
+        multi=True
+    )
 
-    print('Importing to "{}" database on {}...'.format(db.name, db.client.address[0]))
+    print('Importing to "{}" database on {}...'.format(db.name,
+                                                       db.client.address[0]))
     domains_processed = 0
     for row in sorted(csv_f):
         # Skip header row if present
@@ -105,8 +118,8 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
         # Fix up the integer entries
         #
-        # row[20] = DMARC policy percentage
-        for index in (20,):
+        # row[21] = DMARC policy percentage
+        for index in (21,):
             if row[index]:
                 row[index] = int(row[index])
             else:
@@ -126,7 +139,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert "True"/"False" strings to boolean values (or None)
-        for boolean_item in (2, 3, 6, 8, 10, 11, 13, 14, 16, 17, 23, 24):
+        for boolean_item in (2, 3, 6, 8, 10, 11, 13, 14, 16, 17, 24, 25):
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -160,14 +173,22 @@ def store_data(clean_federal, agency_dict, db_config_file):
             return {'uri': uri, 'modifier': modifier}
 
         # The if clauses at the end drop empty strings
-        ruas = [split_rua_or_ruf(rua.strip()) for rua in row[21].split(',') if rua]
-        rufs = [split_rua_or_ruf(ruf.strip()) for ruf in row[22].split(',') if ruf]
+        ruas = [
+            split_rua_or_ruf(rua.strip())
+            for rua in row[22].split(',')
+            if rua
+        ]
+        rufs = [
+            split_rua_or_ruf(ruf.strip())
+            for ruf in row[23].split(',')
+            if ruf
+        ]
 
         db.trustymail.insert_one({
             'domain': row[0],
-            'base_domain':row[1],
+            'base_domain': row[1],
             'is_base_domain': row[0] == row[1],
-            'agency': {'id':id, 'name':agency},
+            'agency': {'id': id, 'name': agency},
             'live': row[2],
             'mx_record': row[3],
             'mail_servers': row[4],
@@ -186,20 +207,24 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'valid_dmarc_base_domain': row[17],
             'dmarc_results_base_domain': row[18],
             'dmarc_policy': row[19],
-            'dmarc_policy_percentage': row[20],
+            'dmarc_subdomain_policy': row[20],
+            'dmarc_policy_percentage': row[21],
             'aggregate_report_uris': ruas,
             'forensic_report_uris': rufs,
-            'has_aggregate_report_uri': row[23],
-            'has_forensic_report_uri': row[24],
-            'syntax_errors': row[25],
-            'debug_info': row[26],
+            'has_aggregate_report_uri': row[24],
+            'has_forensic_report_uri': row[25],
+            'syntax_errors': row[26],
+            'debug_info': row[27],
             'scan_date': date_today,
             'latest': True
-    	})
+        })
         domains_processed += 1
 
-    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))
-    #import IPython; IPython.embed() #<<< BREAKPOINT >>>
+    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed,
+                                                                             db.name,
+                                                                             db.client.address[0]))
+    # import IPython; IPython.embed() #<<< BREAKPOINT >>>
+
 
 if __name__ == '__main__':
     main()
