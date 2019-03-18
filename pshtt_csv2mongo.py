@@ -2,7 +2,6 @@
 import csv
 import re
 import yaml
-import sys
 import datetime
 from pymongo import MongoClient
 
@@ -19,7 +18,8 @@ CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.
 PSHTT_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/results/pshtt.csv'
 
 
-# Take a sorted csv from a domain scan and populate a mongo database with the results
+# Take a sorted csv from a domain scan and populate a mongo database
+# with the results
 class Domainagency():
     def __init__(self, domain, agency):
         self.domain = domain
@@ -53,7 +53,6 @@ def open_csv_files():
 
         clean_federal.append([domain, agency])
 
-
     # Prepare the agency list agency_name : agency_id
     agency_dict = {}
     for row in csv.reader(agencies):
@@ -72,6 +71,7 @@ def open_csv_files():
 
     return clean_federal, agency_dict
 
+
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
         config = yaml.load(stream)
@@ -88,7 +88,8 @@ def db_from_config(config_filename):
 
 
 def store_data(clean_federal, agency_dict, db_config_file):
-    date_today = datetime.datetime.combine(datetime.datetime.utcnow(), datetime.time.min)
+    date_today = datetime.datetime.combine(datetime.datetime.utcnow(),
+                                           datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(PSHTT_RESULTS_FILE)
     csv_f = csv.reader(f)
@@ -99,9 +100,18 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.https_scan.update({'latest':True}, {'$set':{'latest':False}}, multi=True)
+    db.https_scan.update(
+        {
+            'latest': True
+        },
+        {
+            '$set': {
+                'latest': False
+            }
+        }, multi=True)
 
-    print('Importing to "{}" database on {}...'.format(db.name, db.client.address[0]))
+    print('Importing to "{}" database on {}...'.format(db.name,
+                                                       db.client.address[0]))
     domains_processed = 0
     for row in sorted(csv_f):
         # Skip header row if present
@@ -139,7 +149,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             "domain": row[0],
             "base_domain": row[1],
             'is_base_domain': row[0] == row[1],
-            'agency': {'id':id, 'name':agency},
+            'agency': {'id': id, 'name': agency},
             "canonical_url": row[2],
             "live": row[3],
             "redirect": row[4],
@@ -169,7 +179,10 @@ def store_data(clean_federal, agency_dict, db_config_file):
         })
         domains_processed += 1
 
-    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))
+    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed,
+                                                                             db.name,
+                                                                             db.client.address[0]))
+
 
 if __name__ == "__main__":
     main()

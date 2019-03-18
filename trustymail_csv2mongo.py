@@ -1,9 +1,7 @@
 #!/usr/local/bin/python3
 
 import csv
-import re
 import yaml
-import sys
 import datetime
 from pymongo import MongoClient
 
@@ -20,15 +18,18 @@ CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.
 TRUSTYMAIL_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/results/trustymail.csv'
 
 
-# Take a sorted csv from a domain scan and populate a mongo database with the results
+# Take a sorted csv from a domain scan and populate a mongo database
+# with the results
 class Domainagency():
     def __init__(self, domain, agency):
         self.domain = domain
         self.agency = agency
 
+
 def main():
     opened_files = open_csv_files()
     store_data(opened_files[0], opened_files[1], DB_CONFIG_FILE)
+
 
 def open_csv_files():
     agencies = open(AGENCIES_FILE)
@@ -67,6 +68,7 @@ def open_csv_files():
     for line in clean_federal:
         writer.writerow(line)
     return clean_federal, agency_dict
+
 
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
