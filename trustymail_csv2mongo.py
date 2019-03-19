@@ -82,7 +82,7 @@ def open_csv_files():
 
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream, Loader=yaml.FullLoader)
 
     try:
         db_uri = config['database']['uri']

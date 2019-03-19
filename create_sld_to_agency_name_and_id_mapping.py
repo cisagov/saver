@@ -10,12 +10,13 @@ INCLUDE_DATA_DIR = '/home/saver/include/'
 SHARED_DATA_DIR = '/home/saver/shared/'
 
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
-CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal_modified.csv'
+CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + \
+    'artifacts/current-federal_modified.csv'
 
 
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream, Loader=yaml.FullLoader)
 
     try:
         db_uri = config['database']['uri']
@@ -49,10 +50,15 @@ def main():
         csvreader = csv.DictReader(current_federal_file)
         for row in csvreader:
             domain = row['Domain Name'].lower()
-            agency = row['Agency'].replace('&', 'and')
-            agency = agency.replace('/', ' ')
-            agency = agency.replace('U. S.', 'U.S.')
-            agency = agency.replace(',', '')
+            agency = row['Agency'].replace(
+                '&', 'and'
+            ).replace(
+                '/', ' '
+            ).replace(
+                'U. S.', 'U.S.'
+            ).replace(
+                ',', ''
+            )
 
             cyhy_id = agency
             is_cyhy_stakeholder = False
