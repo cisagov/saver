@@ -11,9 +11,12 @@ SHARED_DATA_DIR = '/home/saver/shared/'
 
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
 
-CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal_modified.csv'
-UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + 'artifacts/unique-agencies.csv'
-CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.csv'
+CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + \
+    'artifacts/current-federal_modified.csv'
+UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + \
+    'artifacts/unique-agencies.csv'
+CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + \
+    'artifacts/clean-current-federal.csv'
 
 TRUSTYMAIL_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/results/trustymail.csv'
 
@@ -42,14 +45,21 @@ def open_csv_files():
     # Get the cleaned current-federal
     clean_federal = []
     unique = set()
-    for row in csv.reader(current_federal):
-        if row[0] == 'Domain Name':
-            continue
-        domain = row[0]
-        agency = row[2].replace('&', 'and').replace('/', ' ').replace('U. S.', 'U.S.').replace(',', '')
+    for row in csv.DictReader(current_federal):
+        domain = row['Domain Name']
+        agency = row['Agency'].replace(
+            '&', 'and'
+        ).replace(
+            '/', ' '
+        ).replace(
+            'U. S.', 'U.S.'
+        ).replace(
+            ',', ''
+        )
 
         # Store the unique agencies that we see
         unique.add(agency)
+
         clean_federal.append([domain, agency])
 
     # Prepare the agency list agency_name : agency_id
@@ -90,7 +100,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
                                            datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(TRUSTYMAIL_RESULTS_FILE)
-    csv_f = csv.reader(f)
+    csv_f = csv.DictReader(f)
     domain_list = []
 
     for row in clean_federal:
@@ -113,23 +123,20 @@ def store_data(clean_federal, agency_dict, db_config_file):
     print('Importing to "{}" database on {}...'.format(db.name,
                                                        db.client.address[0]))
     domains_processed = 0
-    for row in sorted(csv_f):
-        # Skip header row if present
-        if row[0] == 'Domain':
-            continue
-
+    for row in sorted(csv_f, key=lambda r: r['Domain']):
         # Fix up the integer entries
-        #
-        # row[21] = DMARC policy percentage
-        for index in (21,):
-            if row[index]:
-                row[index] = int(row[index])
+        integer_items = (
+            'DMARC Policy Percentage',
+        )
+        for integer_item in integer_items:
+            if row[integer_item]:
+                row[integer_item] = int(row[integer_item])
             else:
-                row[index] = -1  # -1 means null
+                row[integer_item] = -1  # -1 means null
 
         # Match base_domain
         for domain in domain_list:
-            if domain.domain == row[1]:
+            if domain.domain == row['Base Domain']:
                 agency = domain.agency
                 break
             else:
@@ -141,7 +148,21 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert "True"/"False" strings to boolean values (or None)
-        for boolean_item in (2, 3, 6, 8, 10, 11, 13, 14, 16, 17, 24, 25):
+        boolean_items = (
+            'Live',
+            'MX Record',
+            'Domain Supports SMTP',
+            'Domain Supports STARTTLS',
+            'SPF Record',
+            'Valid SPF',
+            'DMARC Record',
+            'Valid DMARC',
+            'DMARC Record on Base Domain',
+            'Valid DMARC Record on Base Domain',
+            'DMARC Has Aggregate Report URI',
+            'DMARC Has Forensic Report URI'
+        )
+        for boolean_item in boolean_items:
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -177,46 +198,55 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # The if clauses at the end drop empty strings
         ruas = [
             split_rua_or_ruf(rua.strip())
-            for rua in row[22].split(',')
+            for rua in row['DMARC Aggregate Report URIs'].split(',')
             if rua
         ]
         rufs = [
             split_rua_or_ruf(ruf.strip())
-            for ruf in row[23].split(',')
+            for ruf in row['DMARC Forensic Report URIs'].split(',')
             if ruf
         ]
 
         db.trustymail.insert_one({
-            'domain': row[0],
-            'base_domain': row[1],
-            'is_base_domain': row[0] == row[1],
-            'agency': {'id': id, 'name': agency},
-            'live': row[2],
-            'mx_record': row[3],
-            'mail_servers': row[4],
-            'mail_server_ports_tested': row[5],
-            'domain_supports_smtp': row[6],
-            'domain_supports_smtp_results': row[7],
-            'domain_supports_starttls': row[8],
-            'domain_supports_starttls_results': row[9],
-            'spf_record': row[10],
-            'valid_spf': row[11],
-            'spf_results': row[12],
-            'dmarc_record': row[13],
-            'valid_dmarc': row[14],
-            'dmarc_results': row[15],
-            'dmarc_record_base_domain': row[16],
-            'valid_dmarc_base_domain': row[17],
-            'dmarc_results_base_domain': row[18],
-            'dmarc_policy': row[19],
-            'dmarc_subdomain_policy': row[20],
-            'dmarc_policy_percentage': row[21],
+            'domain': row['Domain'],
+            'base_domain': row['Base Domain'],
+            'is_base_domain': row['Domain'] == row['Base Domain'],
+            'agency': {
+                'id': id,
+                'name': agency
+            },
+            'live': row['Live'],
+            'mx_record': row['MX Record'],
+            'mail_servers': row['Mail Servers'],
+            'mail_server_ports_tested': row['Mail Server Ports Tested'],
+            'domain_supports_smtp': row['Domain Supports SMTP'],
+            'domain_supports_smtp_results': row[
+                'Domain Supports SMTP Results'
+            ],
+            'domain_supports_starttls': row['Domain Supports STARTTLS'],
+            'domain_supports_starttls_results': row[
+                'Domain Supports STARTTLS Results'
+            ],
+            'spf_record': row['SPF Record'],
+            'valid_spf': row['Valid SPF'],
+            'spf_results': row['SPF Results'],
+            'dmarc_record': row['DMARC Record'],
+            'valid_dmarc': row['Valid DMARC'],
+            'dmarc_results': row['DMARC Results'],
+            'dmarc_record_base_domain': row['DMARC Record on Base Domain'],
+            'valid_dmarc_base_domain': row[
+                'Valid DMARC Record on Base Domain'
+            ],
+            'dmarc_results_base_domain': row['DMARC Results on Base Domain'],
+            'dmarc_policy': row['DMARC Policy'],
+            'dmarc_subdomain_policy': row['DMARC Subdomain Policy'],
+            'dmarc_policy_percentage': row['DMARC Policy Percentage'],
             'aggregate_report_uris': ruas,
             'forensic_report_uris': rufs,
-            'has_aggregate_report_uri': row[24],
-            'has_forensic_report_uri': row[25],
-            'syntax_errors': row[26],
-            'debug_info': row[27],
+            'has_aggregate_report_uri': row['DMARC Has Aggregate Report URI'],
+            'has_forensic_report_uri': row['DMARC Has Forensic Report URI'],
+            'syntax_errors': row['Syntax Errors'],
+            'debug_info': row['Debug Info'],
             'scan_date': date_today,
             'latest': True
         })
