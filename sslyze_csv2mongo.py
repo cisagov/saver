@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import csv
-import re
 import yaml
-import sys
 import datetime
 from pymongo import MongoClient
 from pytz import timezone
@@ -13,14 +11,18 @@ SHARED_DATA_DIR = '/home/saver/shared/'
 
 AGENCIES_FILE = INCLUDE_DATA_DIR + 'agencies.csv'
 
-CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/current-federal_modified.csv'
-UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + 'artifacts/unique-agencies.csv'
-CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + 'artifacts/clean-current-federal.csv'
+CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + \
+    'artifacts/current-federal_modified.csv'
+UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + \
+    'artifacts/unique-agencies.csv'
+CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + \
+    'artifacts/clean-current-federal.csv'
 
 SSLYZE_RESULTS_FILE = SHARED_DATA_DIR + 'artifacts/results/sslyze.csv'
 
 
-# Take a sorted csv from a domain scan and populate a mongo database with the results
+# Take a sorted csv from a domain scan and populate a mongo database
+# with the results
 class Domainagency():
     def __init__(self, domain, agency):
         self.domain = domain
@@ -43,11 +45,17 @@ def open_csv_files():
     # Get the cleaned current-federal
     clean_federal = []
     unique = set()
-    for row in csv.reader(current_federal):
-        if row[0] == 'Domain Name':
-            continue
-        domain = row[0]
-        agency = row[2].replace('&', 'and').replace('/', ' ').replace('U. S.', 'U.S.').replace(',', '')
+    for row in csv.DictReader(current_federal):
+        domain = row['Domain Name']
+        agency = row['Agency'].replace(
+            '&', 'and'
+        ).replace(
+            '/', ' '
+        ).replace(
+            'U. S.', 'U.S.'
+        ).replace(
+            ',', ''
+        )
 
         # Store the unique agencies that we see
         unique.add(agency)
@@ -72,9 +80,10 @@ def open_csv_files():
 
     return clean_federal, agency_dict
 
+
 def db_from_config(config_filename):
     with open(config_filename, 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream, Loader=yaml.FullLoader)
 
     try:
         db_uri = config['database']['uri']
@@ -88,10 +97,11 @@ def db_from_config(config_filename):
 
 
 def store_data(clean_federal, agency_dict, db_config_file):
-    date_today = datetime.datetime.combine(datetime.datetime.utcnow(), datetime.time.min)
+    date_today = datetime.datetime.combine(datetime.datetime.utcnow(),
+                                           datetime.time.min)
     db = db_from_config(db_config_file)   # set up database connection
     f = open(SSLYZE_RESULTS_FILE)
-    csv_f = csv.reader(f)
+    csv_f = csv.DictReader(f)
     domain_list = []
 
     for row in clean_federal:
@@ -99,34 +109,41 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.sslyze_scan.update({'latest':True}, {'$set':{'latest':False}}, multi=True)
+    db.sslyze_scan.update(
+        {
+            'latest': True
+        },
+        {
+            '$set': {
+                'latest': False
+            }
+        }, multi=True)
 
-    print('Importing to "{}" database on {}...'.format(db.name, db.client.address[0]))
+    print('Importing to "{}" database on {}...'.format(db.name,
+                                                       db.client.address[0]))
     domains_processed = 0
-    for row in sorted(csv_f):
-        # Skip header row if present
-        if row[0] == 'Domain':
-            continue
-
+    for row in sorted(csv_f, key=lambda r: r['Domain']):
         # Because of the way domain-scan works, if a domain does not need to be
         # scanned because pshtt and trustymail have determined that there are
         # no web or mail servers, then a row of null data is output.  We should
         # skip such rows.  Such rows have a null for the "scanned port" field.
-        if not row[3]:
+        if not row['Scanned Port']:
             continue
 
         # Fix up the integer entries
-        #
-        # row[3] = scanned port, row[17] = key_length
-        for index in (3, 17):
-            if row[index]:
-                row[index] = int(row[index])
+        integer_items = (
+            'Scanned Port',
+            'Key Length'
+        )
+        for integer_item in integer_items:
+            if row[integer_item]:
+                row[integer_item] = int(row[integer_item])
             else:
-                row[index] = -1  # -1 means null
+                row[integer_item] = -1  # -1 means null
 
         # Match base_domain
         for domain in domain_list:
-            if domain.domain == row[1]:
+            if domain.domain == row['Base Domain']:
                 agency = domain.agency
                 break
             else:
@@ -138,7 +155,24 @@ def store_data(clean_federal, agency_dict, db_config_file):
             id = agency
 
         # Convert 'True'/'False' strings to boolean values (or None)
-        for boolean_item in (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19, 20, 29):
+        boolean_items = (
+            'STARTTLS SMTP',
+            'SSLv2',
+            'SSLv3',
+            'TLSv1.0',
+            'TLSv1.1',
+            'TLSv1.2',
+            'TLSv1.3',
+            'Any Forward Secrecy',
+            'All Forward Secrecy',
+            'Any RC4',
+            'All RC4',
+            'Any 3DES',
+            'SHA-1 in Served Chain',
+            'SHA-1 in Constructed Chain',
+            'Is Symantec Cert'
+        )
+        for boolean_item in boolean_items:
             if row[boolean_item] == 'True':
                 row[boolean_item] = True
             elif row[boolean_item] == 'False':
@@ -151,50 +185,62 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # Note that the date/time strings returned by sslyze are UTC:
         # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
         # They are also in the format YYYY-MM-DDTHH:MM:SS.
-        for index in (21, 22):
-            if row[index]:
-                row[index] = datetime.datetime.strptime(row[index], '%Y-%m-%dT%H:%M:%S').replace(tzinfo=timezone('US/Eastern'))
+        date_items = (
+            'Not Before',
+            'Not After'
+        )
+        for date_item in date_items:
+            if row[date_item]:
+                row[date_item] = datetime.datetime.strptime(
+                    row[date_item], '%Y-%m-%dT%H:%M:%S'
+                ).replace(tzinfo=timezone('US/Eastern'))
             else:
-                row[index] = None
+                row[date_item] = None
 
         db.sslyze_scan.insert_one({
-            'domain': row[0],
-            'base_domain': row[1],
-            'is_base_domain': row[0] == row[1],
-            'agency': {'id':id, 'name':agency},
-            'scanned_hostname': row[2],
-            'scanned_port': row[3],
-            'starttls_smtp': row[4],
-            'sslv2': row[5],
-            'sslv3': row[6],
-            'tlsv1_0': row[7],
-            'tlsv1_1': row[8],
-            'tlsv1_2': row[9],
-            'tlsv1_3': row[10],
-            'any_forward_secrecy': row[11],
-            'all_forward_secrecy': row[12],
-            'any_rc4': row[13],
-            'all_rc4': row[14],
-            'any_3des': row[15],
-            'key_type': row[16],
-            'key_length': row[17],
-            'signature_algorithm': row[18],
-            'sha1_in_served_chain': row[19],
-            'sha1_in_construsted_chain': row[20],
-            'not_before': row[21],
-            'not_after': row[22],
-            'highest_served_issuer': row[23],
-            'highest_constructed_issuer': row[24],
+            'domain': row['Domain'],
+            'base_domain': row['Base Domain'],
+            'is_base_domain': row['Domain'] == row['Base Domain'],
+            'agency': {
+                'id': id,
+                'name': agency
+            },
+            'scanned_hostname': row['Scanned Hostname'],
+            'scanned_port': row['Scanned Port'],
+            'starttls_smtp': row['STARTTLS SMTP'],
+            'sslv2': row['SSLv2'],
+            'sslv3': row['SSLv3'],
+            'tlsv1_0': row['TLSv1.0'],
+            'tlsv1_1': row['TLSv1.1'],
+            'tlsv1_2': row['TLSv1.2'],
+            'tlsv1_3': row['TLSv1.3'],
+            'any_forward_secrecy': row['Any Forward Secrecy'],
+            'all_forward_secrecy': row['All Forward Secrecy'],
+            'any_rc4': row['Any RC4'],
+            'all_rc4': row['All RC4'],
+            'any_3des': row['Any 3DES'],
+            'key_type': row['Key Type'],
+            'key_length': row['Key Length'],
+            'signature_algorithm': row['Signature Algorithm'],
+            'sha1_in_served_chain': row['SHA-1 in Served Chain'],
+            'sha1_in_construsted_chain': row['SHA-1 in Constructed Chain'],
+            'not_before': row['Not Before'],
+            'not_after': row['Not After'],
+            'highest_served_issuer': row['Highest Served Issuer'],
+            'highest_constructed_issuer': row['Highest Constructed Issuer'],
             # I'm omitting some fields related to extended validation
-            'is_symantec_cert': row[29],
-            'symantec_distrust_date': row[30],
-            'errors': row[31],
+            'is_symantec_cert': row['Is Symantec Cert'],
+            'symantec_distrust_date': row['Symantec Distrust Date'],
+            'errors': row['Errors'],
             'scan_date': date_today,
             'latest': True
         })
         domains_processed += 1
 
-    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed, db.name, db.client.address[0]))
+    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed,
+                                                                             db.name,
+                                                                             db.client.address[0]))
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
