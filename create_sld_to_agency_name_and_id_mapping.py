@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import csv
 import datetime
 import yaml
@@ -21,7 +22,7 @@ def db_from_config(config_filename):
     try:
         db_uri = config['database']['uri']
         db_name = config['database']['name']
-    except:
+    except KeyError:
         print(f'Incorrect database config file format: {config_filename}')
 
     db_connection = MongoClient(host=db_uri, tz_aware=True)
