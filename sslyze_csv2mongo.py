@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import csv
 import yaml
 import datetime
@@ -82,17 +83,22 @@ def open_csv_files():
 
 
 def db_from_config(config_filename):
+    db = None
+
     with open(config_filename, 'r') as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
 
-    try:
-        db_uri = config['database']['uri']
-        db_name = config['database']['name']
-    except:
-        print('Incorrect database config file format: {}'.format(config_filename))
+    if config is not None:
+        try:
+            db_uri = config['database']['uri']
+            db_name = config['database']['name']
+        except KeyError:
+            print('Incorrect database config file format: '
+                  '{}'.format(config_filename))
 
-    db_connection = MongoClient(host=db_uri, tz_aware=True)
-    db = db_connection[db_name]
+        db_connection = MongoClient(host=db_uri, tz_aware=True)
+        db = db_connection[db_name]
+
     return db
 
 
@@ -237,9 +243,8 @@ def store_data(clean_federal, agency_dict, db_config_file):
         })
         domains_processed += 1
 
-    print('Successfully imported {} documents to "{}" database on {}'.format(domains_processed,
-                                                                             db.name,
-                                                                             db.client.address[0]))
+    print('Successfully imported {} documents to "{}" database on '
+          '{}'.format(domains_processed, db.name, db.client.address[0]))
 
 
 if __name__ == '__main__':
