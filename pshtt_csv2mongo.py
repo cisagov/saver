@@ -82,18 +82,22 @@ def open_csv_files():
 
 
 def db_from_config(config_filename):
+    db = None
+
     with open(config_filename, 'r') as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
 
-    try:
-        db_uri = config['database']['uri']
-        db_name = config['database']['name']
-    except KeyError:
-        print('Incorrect database config file format: '
-              '{}'.format(config_filename))
+    if config is not None:
+        try:
+            db_uri = config['database']['uri']
+            db_name = config['database']['name']
+        except KeyError:
+            print('Incorrect database config file format: '
+                  '{}'.format(config_filename))
 
-    db_connection = MongoClient(host=db_uri, tz_aware=True)
-    db = db_connection[db_name]
+        db_connection = MongoClient(host=db_uri, tz_aware=True)
+        db = db_connection[db_name]
+
     return db
 
 
