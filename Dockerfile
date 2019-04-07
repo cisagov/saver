@@ -16,7 +16,9 @@ RUN pip3 install --upgrade pip setuptools
 ###
 # Dependencies
 ###
-RUN pip3 install --upgrade pymongo pytz pyyaml
+RUN pip3 install --upgrade \
+    https://github.com/cisagov/mongo-db-from-config/tarball/develop \
+    pytz
 
 ###
 # Create unprivileged user
