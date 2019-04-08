@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+
 import csv
-import re
-import yaml
 import datetime
-from pymongo import MongoClient
+import re
+
+from mongo_db_from_config import db_from_config
 
 DB_CONFIG_FILE = '/run/secrets/scan_write_creds.yml'
 INCLUDE_DATA_DIR = '/home/saver/include/'
@@ -79,26 +80,6 @@ def open_csv_files():
         writer.writerow(line)
 
     return clean_federal, agency_dict
-
-
-def db_from_config(config_filename):
-    db = None
-
-    with open(config_filename, 'r') as stream:
-        config = yaml.load(stream, Loader=yaml.FullLoader)
-
-    if config is not None:
-        try:
-            db_uri = config['database']['uri']
-            db_name = config['database']['name']
-        except KeyError:
-            print('Incorrect database config file format: '
-                  '{}'.format(config_filename))
-
-        db_connection = MongoClient(host=db_uri, tz_aware=True)
-        db = db_connection[db_name]
-
-    return db
 
 
 def store_data(clean_federal, agency_dict, db_config_file):
