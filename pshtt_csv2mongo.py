@@ -135,6 +135,9 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # Convert "True"/"False" strings to boolean values (or None)
         boolean_items = (
             'Live',
+            'HTTPS Live',
+            'HTTPS Full Connection',
+            'HTTPS Client Auth Required'
             'Redirect',
             'Valid HTTPS',
             'Defaults to HTTPS',
@@ -173,6 +176,9 @@ def store_data(clean_federal, agency_dict, db_config_file):
             },
             'canonical_url': row['Canonical URL'],
             'live': row['Live'],
+            'https_live': row['HTTPS Live'],
+            'https_full_connection': row['HTTPS Full Connection'],
+            'https_client_auth_required': row['HTTPS Client Auth Required'],
             'redirect': row['Redirect'],
             'redirect_to': row['Redirect To'],
             'valid_https': row['Valid HTTPS'],
