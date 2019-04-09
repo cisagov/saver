@@ -137,7 +137,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             'Live',
             'HTTPS Live',
             'HTTPS Full Connection',
-            'HTTPS Client Auth Required'
+            'HTTPS Client Auth Required',
             'Redirect',
             'Valid HTTPS',
             'Defaults to HTTPS',
