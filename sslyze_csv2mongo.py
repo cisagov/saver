@@ -95,7 +95,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.sslyze_scan.update(
+    db.sslyze_scan.update_many(
         {
             'latest': True
         },
@@ -103,7 +103,8 @@ def store_data(clean_federal, agency_dict, db_config_file):
             '$set': {
                 'latest': False
             }
-        }, multi=True)
+        }
+    )
 
     print('Importing to "{}" database on {}...'.format(db.name,
                                                        db.client.address[0]))
