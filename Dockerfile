@@ -25,6 +25,7 @@ ENV DEPS \
     openssl \
     redis \
     wget
+RUN apk --no-cache --quiet upgrade
 RUN apk --no-cache --quiet add $DEPS
 
 ###
