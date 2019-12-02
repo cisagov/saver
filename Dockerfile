@@ -15,6 +15,10 @@ ENV USER=saver
 # We need redis so we can use redis-cli to communicate with redis.  I
 # also reinstall wget with openssl, since otherwise wget does not seem
 # to know how to HTTPS.
+#
+# Note that we use apk --no-cache to avoid writing to a local cache.
+# This results in a smaller final image, at the cost of slightly
+# longer install times.
 ###
 ENV DEPS \
     bash \
