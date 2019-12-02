@@ -93,7 +93,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domain_list.append(da)
 
     # Reset previous "latest:True" flags to False
-    db.trustymail.update(
+    db.trustymail.update_many(
         {
             'latest': True
         },
@@ -101,8 +101,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             '$set': {
                 'latest': False
             }
-        },
-        multi=True
+        }
     )
 
     print('Importing to "{}" database on {}...'.format(db.name,
