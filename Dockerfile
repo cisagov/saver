@@ -1,7 +1,7 @@
 ###
 # Install everything we need
 ###
-FROM python:3-alpine as install
+FROM python:3.11.0a5-alpine as install
 LABEL maintainer="jeremy.frasier@trio.dhs.gov"
 LABEL organization="CISA Cyber Assessments"
 LABEL url="https://github.com/cisagov/saver"
