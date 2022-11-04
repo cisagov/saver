@@ -1,13 +1,54 @@
-###
-# Install everything we need
-###
-FROM python:3-alpine as install
-LABEL maintainer="jeremy.frasier@trio.dhs.gov"
-LABEL organization="CISA Cyber Assessments"
-LABEL url="https://github.com/cisagov/saver"
+ARG VERSION=unspecified
 
-ENV HOME=/home/saver
-ENV USER=saver
+FROM python:3.10.1-alpine
+
+ARG VERSION
+
+###
+# For a list of pre-defined annotation keys and value types see:
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+#
+# Note: Additional labels are added by the build workflow.
+###
+LABEL org.opencontainers.image.authors="jeremy.frasier@cisa.dhs.gov"
+LABEL org.opencontainers.image.vendor="Cybersecurity and Infrastructure Security Agency"
+
+###
+# Unprivileged user setup variables
+###
+ARG CISA_GID=421
+ARG CISA_UID=${CISA_GID}
+ENV CISA_USER="cisa"
+ENV CISA_GROUP=${CISA_USER}
+ENV CISA_HOME="/home/cisa"
+
+###
+# Unprivileged user setup dependencies
+#
+# Install shadow, so we have adduser and addgroup.
+#
+# Note that we use apk --no-cache to avoid writing to a local cache.
+# This results in a smaller final image, at the cost of slightly
+# longer install times.
+#
+# Setup user dependencies are only needed for setting up the user and
+# will be removed at the end of that process.
+###
+ENV SETUP_USER_DEPS \
+    shadow
+RUN apk --update --no-cache --quiet upgrade
+RUN apk --no-cache --quiet add ${SETUP_USER_DEPS}
+
+###
+# Create unprivileged user
+###
+RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
+    && adduser --system --uid ${CISA_UID} --ingroup ${CISA_GROUP} ${CISA_USER}
+
+###
+# Remove build dependencies for unprivileged user
+###
+RUN apk --no-cache --quiet del ${SETUP_USER_DEPS}
 
 ###
 # Dependencies
@@ -25,8 +66,7 @@ ENV DEPS \
     openssl \
     redis \
     wget
-RUN apk --no-cache --quiet upgrade
-RUN apk --no-cache --quiet add $DEPS
+RUN apk --no-cache --quiet add ${DEPS}
 
 ###
 # Make sure pip and setuptools are the latest versions
@@ -38,58 +78,23 @@ RUN apk --no-cache --quiet add $DEPS
 RUN pip install --no-cache-dir --upgrade pip setuptools
 
 ###
-# Install dependencies
+# Install Python dependencies
 ###
 RUN pip install --no-cache-dir --upgrade \
     https://github.com/cisagov/mongo-db-from-config/tarball/develop \
     pytz
 
-
 ###
-# Setup the saver user and its home directory
-###
-FROM install AS setup_user
-
-###
-# Dependencies
-#
-# Install shadow, so we have adduser and addgroup.
-#
-# Setup user dependencies are only needed for setting up the user and
-# will be removed at the end of that process.
-###
-ENV SETUP_USER_DEPS \
-    shadow
-RUN apk --no-cache --quiet add $SETUP_USER_DEPS
-
-###
-# Create unprivileged user
-###
-RUN addgroup -S $USER
-RUN adduser -S -g "$USER user" -G $USER $USER
-
-###
-# Remove build dependencies
-###
-RUN apk --no-cache --quiet del $SETUP_USER_DEPS
-
 # Put this just before we change users because the copy (and every
 # step after it) will always be rerun by docker, but we need to be
 # root for the chown command.
-COPY . $HOME
-RUN chown -R ${USER}:${USER} $HOME
-
-
 ###
-# Setup working directory and entrypoint
-###
-FROM setup_user AS final
+COPY src ${CISA_HOME}
+RUN chown -R ${CISA_USER}:${CISA_USER} ${CISA_HOME}
 
 ###
-# Prepare to Run
+# Prepare to run
 ###
-# Right now we need to be root to create the file that
-# tells the report container to grab the data from the database.
-# USER saver:saver
-WORKDIR $HOME
+# USER ${CISA_USER}:${CISA_GROUP}
+WORKDIR ${CISA_HOME}
 ENTRYPOINT ["./save_to_db.sh"]

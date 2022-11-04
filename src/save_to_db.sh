@@ -3,9 +3,8 @@
 SHARED_DIR='/home/saver/shared'
 
 echo 'Waiting for scanner'
-while [ "$(redis-cli -h redis get scanning_complete)" != "true" ]
-do
-    sleep 5
+while [ "$(redis-cli -h redis get scanning_complete)" != "true" ]; do
+  sleep 5
 done
 echo "Scanner finished"
 
