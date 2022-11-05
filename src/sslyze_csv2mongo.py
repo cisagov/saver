@@ -83,7 +83,6 @@ def open_csv_files():
         writer.writerow([agency])
 
     # Create the clean-current-federal for use later.
-    # TODO: Remove this and have it handled in code.
     clean_output = open(CLEAN_CURRENT_FEDERAL_FILE, "w+")
     writer = csv.writer(clean_output)
     for line in clean_federal:

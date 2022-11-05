@@ -82,7 +82,6 @@ def open_csv_files():
         writer.writerow([agency])
 
     # Create the clean-current-federal for use later.
-    # TODO: Remove this and have it handled in code.
     clean_output = open(CLEAN_CURRENT_FEDERAL_FILE, "w+")
     writer = csv.writer(clean_output)
     for line in clean_federal:
@@ -243,6 +242,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         'Successfully imported {} documents to "{}" database on '
         "{}".format(domains_processed, db.name, db.client.address[0])
     )
+
 
 if __name__ == "__main__":
     main()
