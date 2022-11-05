@@ -144,7 +144,7 @@ containerize.  It is recommended that most users use a version tag (e.g.
 | Image:tag | Description |
 |-----------|-------------|
 |`cisagov/saver:1.3.0`| An exact release version. |
-|`cisagov/saver:1.2`| The most recent release matching the major and minor version numbers. |
+|`cisagov/saver:1.3`| The most recent release matching the major and minor version numbers. |
 |`cisagov/saver:1`| The most recent release matching the major version number. |
 |`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
 |`cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
