@@ -243,8 +243,6 @@ def store_data(clean_federal, agency_dict, db_config_file):
         'Successfully imported {} documents to "{}" database on '
         "{}".format(domains_processed, db.name, db.client.address[0])
     )
-    # import IPython; IPython.embed() #<<< BREAKPOINT >>>
-
 
 if __name__ == "__main__":
     main()
