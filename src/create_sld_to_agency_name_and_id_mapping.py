@@ -26,7 +26,7 @@ def db_from_config(config_filename):
     """
     db = None
 
-    with open(config_filename, "r") as stream:
+    with open(config_filename) as stream:
         config = yaml.safe_load(stream)
 
     if config is not None:
@@ -47,7 +47,7 @@ def db_from_config(config_filename):
 def main():
     """Create and save the dict of agency names and CyHy IDs keyed by second level domain."""
     # Import the agency mapping data
-    with open(AGENCIES_FILE, "r", newline="") as agencies_file:
+    with open(AGENCIES_FILE, newline="") as agencies_file:
         csvreader = csv.reader(agencies_file)
         agency_mapping = {row[0]: row[1] for row in csvreader}
 
@@ -62,7 +62,7 @@ def main():
     # rows from the collection and (2) use insert_many() to insert all
     # the new data.  That will be much cleaner!
     now = datetime.datetime.utcnow()
-    with open(CURRENT_FEDERAL_FILE, "r", newline="") as current_federal_file:
+    with open(CURRENT_FEDERAL_FILE, newline="") as current_federal_file:
         csvreader = csv.DictReader(current_federal_file)
         for row in csvreader:
             domain = row["Domain Name"].lower()
