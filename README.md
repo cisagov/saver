@@ -198,7 +198,7 @@ There are no optional environment variables.
 
 | Filename      | Purpose              |
 |---------------|----------------------|
-| database_creds.yml | Cyber Hygiene read-only database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage) |
+| database_creds.yml | Cyber Hygiene read-only database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
 
 ## Building from source ##
 
