@@ -71,7 +71,7 @@ RUN pip install --no-cache-dir --upgrade \
 
 ###
 # Put this just before we change users because the copy (and every
-# step after it) will always be rerun by docker, but we need to be
+# step after it) will always be rerun by Docker, but we need to be
 # root for the chown command.
 ###
 COPY src/*.py src/*.sh ${CISA_HOME}
