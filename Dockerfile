@@ -47,7 +47,6 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 # longer install times.
 ###
 ENV DEPS \
-    bash \
     openssl \
     redis \
     wget
