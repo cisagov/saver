@@ -74,7 +74,8 @@ RUN pip install --no-cache-dir --upgrade \
 # step after it) will always be rerun by docker, but we need to be
 # root for the chown command.
 ###
-COPY src ${CISA_HOME}
+COPY src/*.py src/*.sh ${CISA_HOME}
+COPY src/include ${CISA_HOME}/include
 RUN chown -R ${CISA_USER}:${CISA_GROUP} ${CISA_HOME}
 
 ###
