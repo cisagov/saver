@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SHARED_DIR='/home/saver/shared'
+SHARED_DIR="${CISA_HOME}"/shared
 
 echo 'Waiting for scanner'
 while [ "$(redis-cli -h redis get scanning_complete)" != "true" ]; do
