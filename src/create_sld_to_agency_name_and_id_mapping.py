@@ -11,6 +11,8 @@ from pymongo import MongoClient
 import yaml
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
+# TODO: Leverage the CISA_HOME environment variable.  See #64 for more
+# details.
 INCLUDE_DATA_DIR = "/home/cisa/include/"
 SHARED_DATA_DIR = "/home/cisa/shared/"
 
