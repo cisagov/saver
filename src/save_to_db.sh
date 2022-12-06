@@ -6,13 +6,13 @@ echo 'Waiting for scanner'
 while [ "$(redis-cli -h redis get scanning_complete)" != "true" ]; do
   sleep 5
 done
-echo "Scanner finished"
+echo Scanner finished
 
 # No longer needed
 redis-cli -h redis del scanning_complete
 
 # Process scan results and import them to the database
-echo 'Processing results...'
+echo Processing results...
 ./create_sld_to_agency_name_and_id_mapping.py
 ./pshtt_csv2mongo.py
 rm $SHARED_DIR/artifacts/unique-agencies.csv
