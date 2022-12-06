@@ -15,11 +15,11 @@ redis-cli -h redis del scanning_complete
 echo Processing results...
 ./create_sld_to_agency_name_and_id_mapping.py
 ./pshtt_csv2mongo.py
-rm $SHARED_DIR/artifacts/unique-agencies.csv
-rm $SHARED_DIR/artifacts/clean-current-federal.csv
+rm "${SHARED_DIR}"/artifacts/unique-agencies.csv
+rm "${SHARED_DIR}"/artifacts/clean-current-federal.csv
 ./trustymail_csv2mongo.py
-rm $SHARED_DIR/artifacts/unique-agencies.csv
-rm $SHARED_DIR/artifacts/clean-current-federal.csv
+rm "${SHARED_DIR}"/artifacts/unique-agencies.csv
+rm "${SHARED_DIR}"/artifacts/clean-current-federal.csv
 ./sslyze_csv2mongo.py
 # Leave a copy of unique-agencies.csv and clean-current-federal.csv
 # since the report tool will need it
