@@ -11,8 +11,8 @@ from mongo_db_from_config import db_from_config
 from pytz import timezone
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
-INCLUDE_DATA_DIR = "/home/saver/include/"
-SHARED_DATA_DIR = "/home/saver/shared/"
+INCLUDE_DATA_DIR = "/home/cisa/include/"
+SHARED_DATA_DIR = "/home/cisa/shared/"
 
 AGENCIES_FILE = INCLUDE_DATA_DIR + "agencies.csv"
 
