@@ -5,23 +5,23 @@
 # Standard Python Libraries
 import csv
 import datetime
+import os
 
 # Third-Party Libraries
 from mongo_db_from_config import db_from_config
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
-# TODO: Leverage the CISA_HOME environment variable.  See #64 for more
-# details.
-INCLUDE_DATA_DIR = "/home/cisa/include/"
-SHARED_DATA_DIR = "/home/cisa/shared/"
+HOME_DIR = os.environ.get("CISA_HOME")
+INCLUDE_DATA_DIR = f"{HOME_DIR}/include"
+SHARED_DATA_DIR = f"{HOME_DIR}/shared"
 
-AGENCIES_FILE = INCLUDE_DATA_DIR + "agencies.csv"
+AGENCIES_FILE = f"{INCLUDE_DATA_DIR}/agencies.csv"
 
-CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + "artifacts/current-federal_modified.csv"
-UNIQUE_AGENCIES_FILE = SHARED_DATA_DIR + "artifacts/unique-agencies.csv"
-CLEAN_CURRENT_FEDERAL_FILE = SHARED_DATA_DIR + "artifacts/clean-current-federal.csv"
+CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/current-federal_modified.csv"
+UNIQUE_AGENCIES_FILE = f"{SHARED_DATA_DIR}/artifacts/unique-agencies.csv"
+CLEAN_CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/clean-current-federal.csv"
 
-TRUSTYMAIL_RESULTS_FILE = SHARED_DATA_DIR + "artifacts/results/trustymail.csv"
+TRUSTYMAIL_RESULTS_FILE = f"{SHARED_DATA_DIR}/artifacts/results/trustymail.csv"
 
 
 class Domainagency:
