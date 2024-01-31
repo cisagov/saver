@@ -61,7 +61,7 @@ def open_csv_files():
     clean_federal = []
     unique = set()
     for row in csv.DictReader(current_federal):
-        domain = row["Domain Name"]
+        domain = row["Domain name"]
         agency = (
             row["Agency"]
             .replace("&", "and")
