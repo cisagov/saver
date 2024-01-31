@@ -1,4 +1,4 @@
-FROM python:3.12.0-alpine
+FROM python:3.12.1-alpine
 
 ###
 # For a list of pre-defined annotation keys and value types see:
@@ -6,7 +6,7 @@ FROM python:3.12.0-alpine
 #
 # Note: Additional labels are added by the build workflow.
 ###
-LABEL org.opencontainers.image.authors="vm-fusion-dev-group@trio.dhs.gov"
+LABEL org.opencontainers.image.authors="vm-dev@gwe.cisa.dhs.gov"
 LABEL org.opencontainers.image.vendor="Cybersecurity and Infrastructure Security Agency"
 
 ###
