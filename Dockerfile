@@ -1,4 +1,4 @@
-FROM python:3.12.0-alpine
+FROM python:3.12.1-alpine
 
 ###
 # For a list of pre-defined annotation keys and value types see:
