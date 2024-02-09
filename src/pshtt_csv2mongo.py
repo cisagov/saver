@@ -4,7 +4,7 @@
 
 # Standard Python Libraries
 import csv
-import datetime
+from datetime import datetime, time, timezone
 import os
 import re
 
@@ -103,9 +103,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     :param db_config_file: The name of the file where the database
     configuration is stored
     """
-    date_today = datetime.datetime.combine(
-        datetime.datetime.utcnow(), datetime.time.min
-    )
+    date_today = datetime.combine(datetime.now(timezone.utc), time.min)
     db = db_from_config(db_config_file)  # set up database connection
     f = open(PSHTT_RESULTS_FILE)
     csv_f = csv.DictReader(f)

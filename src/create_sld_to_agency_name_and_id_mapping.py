@@ -4,7 +4,7 @@
 
 # Standard Python Libraries
 import csv
-import datetime
+from datetime import datetime, timezone
 import os
 
 # Third-Party Libraries
@@ -63,7 +63,7 @@ def main():
     # Mongo 4 we can use a transaction to atomically (1) drop all the
     # rows from the collection and (2) use insert_many() to insert all
     # the new data.  That will be much cleaner!
-    now = datetime.datetime.utcnow()
+    now = datetime.now(timezone.utc)
     with open(CURRENT_FEDERAL_FILE, newline="") as current_federal_file:
         csvreader = csv.DictReader(current_federal_file)
         for row in csvreader:

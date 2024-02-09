@@ -4,12 +4,11 @@
 
 # Standard Python Libraries
 import csv
-import datetime
+from datetime import datetime, time, timezone
 import os
 
 # Third-Party Libraries
 from mongo_db_from_config import db_from_config
-from pytz import timezone
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
 HOME_DIR = os.environ.get("CISA_HOME")
@@ -103,9 +102,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     :param db_config_file: The name of the file where the database
     configuration is stored
     """
-    date_today = datetime.datetime.combine(
-        datetime.datetime.utcnow(), datetime.time.min
-    )
+    date_today = datetime.combine(datetime.now(timezone.utc), time.min)
     db = db_from_config(db_config_file)  # set up database connection
     f = open(SSLYZE_RESULTS_FILE)
     csv_f = csv.DictReader(f)
