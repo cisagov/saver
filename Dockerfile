@@ -68,8 +68,7 @@ RUN pip3 install --no-cache-dir --upgrade \
 # Install Python dependencies
 ###
 RUN pip3 install --no-cache-dir --upgrade \
-    https://github.com/cisagov/mongo-db-from-config/tarball/develop \
-    pytz
+    https://github.com/cisagov/mongo-db-from-config/tarball/develop
 
 ###
 # Put this just before we change users because the copy (and every
