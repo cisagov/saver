@@ -6,6 +6,7 @@
 import csv
 from datetime import datetime, time, timezone
 import os
+from zoneinfo import ZoneInfo
 
 # Third-Party Libraries
 from mongo_db_from_config import db_from_config
@@ -182,7 +183,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             if row[date_item]:
                 row[date_item] = datetime.strptime(
                     row[date_item], "%Y-%m-%dT%H:%M:%S"
-                ).replace(tzinfo=timezone("US/Eastern"))
+                ).replace(tzinfo=ZoneInfo("US/Eastern"))
             else:
                 row[date_item] = None
 
