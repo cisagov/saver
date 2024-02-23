@@ -180,7 +180,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         date_items = ("Not Before", "Not After")
         for date_item in date_items:
             if row[date_item]:
-                row[date_item] = datetime.datetime.strptime(
+                row[date_item] = datetime.strptime(
                     row[date_item], "%Y-%m-%dT%H:%M:%S"
                 ).replace(tzinfo=timezone("US/Eastern"))
             else:
