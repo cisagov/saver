@@ -183,7 +183,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             if row[date_item]:
                 row[date_item] = datetime.strptime(
                     row[date_item], "%Y-%m-%dT%H:%M:%S"
-                ).replace(tzinfo=ZoneInfo("US/Eastern"))
+                ).replace(tzinfo=ZoneInfo("America/New_York"))
             else:
                 row[date_item] = None
 
