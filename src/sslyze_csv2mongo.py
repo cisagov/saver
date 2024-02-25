@@ -4,7 +4,7 @@
 
 # Standard Python Libraries
 import csv
-from datetime import datetime, time, timezone
+from datetime import datetime, time
 import os
 from zoneinfo import ZoneInfo
 
@@ -103,7 +103,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     :param db_config_file: The name of the file where the database
     configuration is stored
     """
-    date_today = datetime.combine(datetime.now(timezone.utc), time.min)
+    date_today = datetime.combine(datetime.now(ZoneInfo("UTC")), time.min)
     db = db_from_config(db_config_file)  # set up database connection
     f = open(SSLYZE_RESULTS_FILE)
     csv_f = csv.DictReader(f)
