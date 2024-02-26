@@ -4,8 +4,9 @@
 
 # Standard Python Libraries
 import csv
-from datetime import datetime, time, timezone
+from datetime import datetime, time
 import os
+from zoneinfo import ZoneInfo
 
 # Third-Party Libraries
 from mongo_db_from_config import db_from_config
@@ -102,7 +103,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     :param db_config_file: The name of the file where the database
     configuration is stored
     """
-    date_today = datetime.combine(datetime.now(timezone.utc), time.min)
+    date_today = datetime.combine(datetime.now(ZoneInfo("UTC")), time.min)
     db = db_from_config(db_config_file)  # set up database connection
     f = open(SSLYZE_RESULTS_FILE)
     csv_f = csv.DictReader(f)
@@ -180,9 +181,9 @@ def store_data(clean_federal, agency_dict, db_config_file):
         date_items = ("Not Before", "Not After")
         for date_item in date_items:
             if row[date_item]:
-                row[date_item] = datetime.datetime.strptime(
+                row[date_item] = datetime.strptime(
                     row[date_item], "%Y-%m-%dT%H:%M:%S"
-                ).replace(tzinfo=timezone("US/Eastern"))
+                ).replace(tzinfo=ZoneInfo("America/New_York"))
             else:
                 row[date_item] = None
 
