@@ -33,7 +33,7 @@ expects the secrets in a different location.
 To run the `cisagov/saver` image via Docker:
 
 ```console
-docker run cisagov/saver:1.3.6
+docker run cisagov/saver:1.3.7
 ```
 
 ### Running with Docker Compose ###
@@ -46,7 +46,7 @@ docker run cisagov/saver:1.3.6
 
     services:
       saver:
-        image: cisagov/saver:1.3.6
+        image: cisagov/saver:1.3.7
         volumes:
           - type: bind
             source: <your_log_dir>
@@ -92,7 +92,7 @@ environment variables.  See the
 
     services:
       trustymail_reporter:
-        image: cisagov/saver:1.3.6
+        image: cisagov/saver:1.3.7
         volumes:
           - type: bind
             source: <your_log_dir>
@@ -129,7 +129,7 @@ environment variables.  See the
 1. Pull the new image:
 
     ```console
-    docker pull cisagov/saver:1.3.6
+    docker pull cisagov/saver:1.3.7
     ```
 
 1. Recreate and run the container by following the [previous instructions](#running-with-docker).
@@ -139,11 +139,11 @@ environment variables.  See the
 The images of this container are tagged with [semantic
 versions](https://semver.org) of the underlying saver project that they
 containerize.  It is recommended that most users use a version tag (e.g.
-`:1.3.6`).
+`:1.3.7`).
 
 | Image:tag | Description |
 |-----------|-------------|
-|`cisagov/saver:1.3.6`| An exact release version. |
+|`cisagov/saver:1.3.7`| An exact release version. |
 |`cisagov/saver:1.3`| The most recent release matching the major and minor version numbers. |
 |`cisagov/saver:1`| The most recent release matching the major version number. |
 |`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
@@ -206,8 +206,8 @@ Build the image locally using this git repository as the [build context](https:/
 
 ```console
 docker build \
-  --build-arg VERSION=1.3.6 \
-  --tag cisagov/saver:1.3.6 \
+  --build-arg VERSION=1.3.7 \
+  --tag cisagov/saver:1.3.7 \
   https://github.com/cisagov/saver.git#develop
 ```
 
@@ -237,9 +237,9 @@ Docker:
     docker buildx build \
       --file Dockerfile-x \
       --platform linux/amd64 \
-      --build-arg VERSION=1.3.6 \
+      --build-arg VERSION=1.3.7 \
       --output type=docker \
-      --tag cisagov/saver:1.3.6 .
+      --tag cisagov/saver:1.3.7 .
     ```
 
 ## Contributing ##

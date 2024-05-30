@@ -5,7 +5,7 @@ AMTRAK,AMTRAK
 Appalachian Regional Commission,APPRC
 Armed Forces Retirement Home,AFRH
 Barry Goldwater Scholarship and Excellence in Education Foundation,BGSF
-Chemical Safety Board,CSB
+U.S. Chemical Safety Board,CSB
 Christopher Columbus Fellowship Foundation,CCFF
 Civil Air Patrol,CAP
 Commodity Futures Trading Commission,CFTC
@@ -36,7 +36,7 @@ Election Assistance Commission,EAC
 Environmental Protection Agency,EPA
 Equal Employment Opportunity Commission,EEOC
 Executive Office of the President,EOP
-Export Import Bank of the U.S.,EXIM
+Export-Import Bank of the United States,EXIM
 Farm Credit Administration,FCA
 Federal Communications Commission,FCC
 Federal Deposit Insurance Corporation,FDIC
@@ -60,7 +60,7 @@ Institute of Museum and Library Services,IMLS
 Inter-American Foundation,IAF
 International Boundary and Water Commission,IBWC
 James Madison Memorial Fellowship Foundation,JMMFF
-Japan-US Friendship Commission,JUSFC
+Japan-U.S. Friendship Commission,JUSFC
 Legal Services Corporation,LSC
 Marine Mammal Commission,MMC
 Merit Systems Protection Board,MSPB
@@ -118,5 +118,5 @@ U.S. Commission on Civil Rights,USCCR
 U.S. Department of Agriculture,USDA
 U.S. Nuclear Waste Technical Review Board,NWTRB
 U.S. Office of Special Counsel,OSC
-U.S. Peace Corps,PC
+Peace Corps,PC
 Vietnam Education Foundation,VEF
