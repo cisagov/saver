@@ -176,7 +176,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         # Convert date/time strings to Python datetime
         #
         # Note that the date/time strings returned by sslyze are UTC:
-        # https://github.com/pyca/cryptography/blob/master/src/cryptography/x509/base.py#L481-L526
+        # https://github.com/pyca/cryptography/blob/0ed80b467df9565aa06ff79130f121effe0bd82a/src/cryptography/x509/base.py#L481-L526
         # They are also in the format YYYY-MM-DDTHH:MM:SS.
         date_items = ("Not Before", "Not After")
         for date_item in date_items:
