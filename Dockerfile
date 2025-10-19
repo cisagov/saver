@@ -1,6 +1,6 @@
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.12.1-alpine3.19 AS compile-stage
+FROM docker.io/library/python:3.13.7-alpine3.22 AS compile-stage
 
 ###
 # Unprivileged user variables
@@ -51,7 +51,7 @@ RUN pipenv install --clear --deploy --extra-pip-args "--no-cache-dir" --verbose
 
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.12.1-alpine3.19 AS build-stage
+FROM docker.io/library/python:3.13.7-alpine3.22 AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
@@ -90,7 +90,7 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 # longer install times.
 ###
 RUN apk --no-cache add \
-    redis=7.2.9-r0
+    redis=8.0.4-r0
 
 ###
 # Copy in the Python virtual environment created in compile-stage, symlink the
