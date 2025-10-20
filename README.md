@@ -41,7 +41,7 @@ docker run cisagov/saver:1.4.0
 
     ```yaml
     ---
-    name: skeleton-docker
+    name: saver
 
     services:
       saver:
