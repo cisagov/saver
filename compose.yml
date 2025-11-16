@@ -1,13 +1,16 @@
 ---
-version: "3.7"
-
 # This Docker composition file is used to build and test the container
+
+name: saver
 
 secrets:
   scan_write_creds:
     file: ./src/secrets/scan_write_creds.yml
 
 services:
+  redis:
+    image: redis:alpine
+
   saver:
     # Run the container normally
     build:
@@ -23,5 +26,3 @@ services:
     secrets:
       - source: scan_write_creds
         target: scan_write_creds.yml
-  redis:
-    image: redis:alpine

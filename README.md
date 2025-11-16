@@ -2,13 +2,12 @@
 
 [![GitHub Build Status](https://github.com/cisagov/saver/workflows/build/badge.svg)](https://github.com/cisagov/saver/actions/workflows/build.yml)
 [![CodeQL](https://github.com/cisagov/saver/workflows/CodeQL/badge.svg)](https://github.com/cisagov/saver/actions/workflows/codeql-analysis.yml)
-[![Known Vulnerabilities](https://snyk.io/test/github/cisagov/saver/badge.svg)](https://snyk.io/test/github/cisagov/saver)
 
 ## Docker Image ##
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/cisagov/saver)](https://hub.docker.com/r/cisagov/saver)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cisagov/saver)](https://hub.docker.com/r/cisagov/saver)
-[![Platforms](https://img.shields.io/badge/platforms-amd64%20%7C%20arm%2Fv6%20%7C%20arm%2Fv7%20%7C%20arm64%20%7C%20ppc64le%20%7C%20s390x-blue)](https://hub.docker.com/r/cisagov/saver/tags)
+[![Platforms](https://img.shields.io/badge/platforms-386%20%7C%20amd64%20%7C%20arm%2Fv6%20%7C%20arm%2Fv7%20%7C%20arm64%20%7C%20ppc64le%20%7C%20riscv64%20%7C%20s390x-blue)](https://hub.docker.com/r/cisagov/saver/tags)
 
 This is a Docker container for saving to a [Mongo
 database](https://www.mongodb.com/)
@@ -33,24 +32,24 @@ expects the secrets in a different location.
 To run the `cisagov/saver` image via Docker:
 
 ```console
-docker run cisagov/saver:1.3.7
+docker run cisagov/saver:1.4.0
 ```
 
 ### Running with Docker Compose ###
 
-1. Create a `docker-compose.yml` file similar to the one below to use [Docker Compose](https://docs.docker.com/compose/).
+1. Create a `compose.yml` file similar to the one below to use [Docker Compose](https://docs.docker.com/compose/).
 
     ```yaml
     ---
-    version: "3.7"
+    name: saver
 
     services:
       saver:
-        image: cisagov/saver:1.3.7
+        image: cisagov/saver:1.4.0
         volumes:
-          - type: bind
-            source: <your_log_dir>
+          - source: <your_log_dir>
             target: /home/cisa/shared
+            type: bind
     ```
 
 1. Start the container and detach:
@@ -80,11 +79,11 @@ environment variables.  See the
 
     ```
 
-1. Then add the secrets to your `docker-compose.yml` file:
+1. Then add the secrets to your `compose.yml` file:
 
     ```yaml
     ---
-    version: "3.7"
+    name: saver
 
     secrets:
       database_creds:
@@ -92,11 +91,11 @@ environment variables.  See the
 
     services:
       trustymail_reporter:
-        image: cisagov/saver:1.3.7
+        image: cisagov/saver:1.4.0
         volumes:
-          - type: bind
-            source: <your_log_dir>
+          - source: <your_log_dir>
             target: /home/cisa/shared
+            type: bind
         secrets:
           - source: database_creds
             target: database_creds.yml
@@ -129,22 +128,51 @@ environment variables.  See the
 1. Pull the new image:
 
     ```console
-    docker pull cisagov/saver:1.3.7
+    docker pull cisagov/saver:1.4.0
     ```
 
 1. Recreate and run the container by following the [previous instructions](#running-with-docker).
+
+## Updating Python dependencies ##
+
+This image uses [Pipenv] to manage Python dependencies using a [Pipfile](https://github.com/pypa/pipfile).
+Both updating dependencies and changing the [Pipenv] configuration in `src/Pipfile`
+will result in a modified `src/Pipfile.lock` file that should be committed to the
+repository.
+
+> [!WARNING]
+> The `src/Pipfile.lock` as generated will fail `pre-commit` checks due to JSON formatting.
+
+### Updating dependencies ###
+
+If you want to update existing dependencies you would run the following command
+in the `src/` subdirectory:
+
+```console
+pipenv lock
+```
+
+### Modifying dependencies ###
+
+If you want to add or remove dependencies you would update the `src/Pipfile` file
+and then update dependencies as you would above.
+
+> [!NOTE]
+> You should only specify packages that are direct requirements of
+> your Docker configuration. Allow [Pipenv] to manage the dependencies
+> of the specified packages.
 
 ## Image tags ##
 
 The images of this container are tagged with [semantic
 versions](https://semver.org) of the underlying saver project that they
 containerize.  It is recommended that most users use a version tag (e.g.
-`:1.3.7`).
+`:1.4.0`).
 
 | Image:tag | Description |
 |-----------|-------------|
-|`cisagov/saver:1.3.7`| An exact release version. |
-|`cisagov/saver:1.3`| The most recent release matching the major and minor version numbers. |
+|`cisagov/saver:1.4.0`| An exact release version. |
+|`cisagov/saver:1.4`| The most recent release matching the major and minor version numbers. |
 |`cisagov/saver:1`| The most recent release matching the major version number. |
 |`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
 |`cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
@@ -206,8 +234,7 @@ Build the image locally using this git repository as the [build context](https:/
 
 ```console
 docker build \
-  --build-arg VERSION=1.3.7 \
-  --tag cisagov/saver:1.3.7 \
+  --tag cisagov/saver:1.4.0 \
   https://github.com/cisagov/saver.git#develop
 ```
 
@@ -237,9 +264,8 @@ Docker:
     docker buildx build \
       --file Dockerfile-x \
       --platform linux/amd64 \
-      --build-arg VERSION=1.3.7 \
       --output type=docker \
-      --tag cisagov/saver:1.3.7 .
+      --tag cisagov/saver:1.4.0 .
     ```
 
 ## Contributing ##
@@ -259,3 +285,5 @@ dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 All contributions to this project will be released under the CC0
 dedication. By submitting a pull request, you are agreeing to comply
 with this waiver of copyright interest.
+
+[Pipenv]: https://pypi.org/project/pipenv/

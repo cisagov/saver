@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 """Populate MongoDB from a sorted CSV file as output by domain scan."""
 
