@@ -1,6 +1,7 @@
 # pshtt, trustymail, and sslyze Saver #
 
 [![GitHub Build Status](https://github.com/cisagov/saver/workflows/build/badge.svg)](https://github.com/cisagov/saver/actions/workflows/build.yml)
+[![License](https://img.shields.io/github/license/cisagov/saver)](https://spdx.org/licenses/)
 [![CodeQL](https://github.com/cisagov/saver/workflows/CodeQL/badge.svg)](https://github.com/cisagov/saver/actions/workflows/codeql-analysis.yml)
 
 ## Docker Image ##
