@@ -7,7 +7,7 @@ name = "pypi"
 [packages]
 # Required by src/pshtt_csv2mongo.py, src/sslyze_csv2mongo.py, and
 # src/trustymail_csv2mongo.py
-mongo_db_from_config = {file = "https://github.com/cisagov/mongo-db-from-config/archive/v1.2.0.tar.gz"}
+mongo_db_from_config = {file = "https://github.com/cisagov/mongo-db-from-config/archive/v1.2.1.tar.gz"}
 
 # This version should match the version of Python in the image
 [requires]
