@@ -116,7 +116,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     # Reset previous "latest:True" flags to False
     db.sslyze_scan.update_many({"latest": True}, {"$set": {"latest": False}})
 
-    print('Importing to "{}" database on {}...'.format(db.name, db.client.address[0]))
+    print(f'Importing to "{db.name}" database on {db.client.address[0]}...')
     domains_processed = 0
     for row in sorted(csv_f, key=lambda r: r["Domain"]):
         # Because of the way domain-scan works, if a domain does not need to be
