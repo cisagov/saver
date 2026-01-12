@@ -33,7 +33,7 @@ expects the secrets in a different location.
 To run the `cisagov/saver` image via Docker:
 
 ```console
-docker run cisagov/saver:1.4.2-rc.1
+docker run cisagov/saver:1.4.2
 ```
 
 ### Running with Docker Compose ###
@@ -46,7 +46,7 @@ docker run cisagov/saver:1.4.2-rc.1
 
     services:
       saver:
-        image: cisagov/saver:1.4.2-rc.1
+        image: cisagov/saver:1.4.2
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -92,7 +92,7 @@ environment variables.  See the
 
     services:
       trustymail_reporter:
-        image: cisagov/saver:1.4.2-rc.1
+        image: cisagov/saver:1.4.2
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -129,7 +129,7 @@ environment variables.  See the
 1. Pull the new image:
 
     ```console
-    docker pull cisagov/saver:1.4.2-rc.1
+    docker pull cisagov/saver:1.4.2
     ```
 
 1. Recreate and run the container by following the [previous instructions](#running-with-docker).
@@ -168,11 +168,11 @@ and then update dependencies as you would above.
 The images of this container are tagged with [semantic
 versions](https://semver.org) of the underlying saver project that they
 containerize.  It is recommended that most users use a version tag (e.g.
-`:1.4.2-rc.1`).
+`:1.4.2`).
 
 | Image:tag | Description |
 |-----------|-------------|
-|`cisagov/saver:1.4.2-rc.1`| An exact release version. |
+|`cisagov/saver:1.4.2`| An exact release version. |
 |`cisagov/saver:1.4`| The most recent release matching the major and minor version numbers. |
 |`cisagov/saver:1`| The most recent release matching the major version number. |
 |`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
@@ -235,7 +235,7 @@ Build the image locally using this git repository as the [build context](https:/
 
 ```console
 docker build \
-  --tag cisagov/saver:1.4.2-rc.1 \
+  --tag cisagov/saver:1.4.2 \
   https://github.com/cisagov/saver.git#develop
 ```
 
@@ -266,7 +266,7 @@ Docker:
       --file Dockerfile-x \
       --platform linux/amd64 \
       --output type=docker \
-      --tag cisagov/saver:1.4.2-rc.1 .
+      --tag cisagov/saver:1.4.2 .
     ```
 
 ## Contributing ##
