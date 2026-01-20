@@ -69,7 +69,7 @@ def main():
         for row in csvreader:
             domain = row["Domain name"].lower()
             agency = (
-                row["Agency"]
+                row["Organization name"]
                 .replace("&", "and")
                 .replace("/", " ")
                 .replace("U. S.", "U.S.")
