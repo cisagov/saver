@@ -177,7 +177,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
             Returns
             -------
-            dict: The rua or ruf aplit into its URI and modifier, if
+            dict: The rua or ruf split into its URI and modifier, if
             any.
             """
             pieces = text.split("!")
