@@ -4,7 +4,7 @@
 
 # Standard Python Libraries
 import csv
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 import os
 from zoneinfo import ZoneInfo
 
@@ -94,7 +94,7 @@ def open_csv_files():
 
 
 def store_data(clean_federal, agency_dict, db_config_file):
-    """Save the sslyze data to the database.
+    """Save the sslyze data to the database and delete data older than one year.
 
     :param clean_federal: The cleaned up version of current federal
     returned by open_csv_files()
@@ -227,8 +227,14 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domains_processed += 1
 
     print(
-        'Successfully imported {} documents to "{}" database on '
-        "{}".format(domains_processed, db.name, db.client.address[0])
+        f'Successfully imported {domains_processed} documents to "{db.name}" database on {db.client.address[0]}'
+    )
+
+    # Delete any records older than one year
+    one_year_ago = date_today - timedelta(years=1)
+    result = db.sslyze_scan.delete_many({"scan_date": {"$lte": one_year_ago}})
+    print(
+        f"Deleted {result.deleted_count} scan records from {db.name} on {db.client.address[0]} that were older than {one_year_ago}."
     )
 
 
