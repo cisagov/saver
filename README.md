@@ -15,7 +15,9 @@ database](https://www.mongodb.com/)
 [pshtt](https://github.com/cisagov/pshtt),
 [trustymail](https://github.com/cisagov/trustymail), and
 [sslyze](https://github.com/nabla-c0d3/sslyze) results collected via
-[domain-scan](https://github.com/18F/domain-scan).
+[domain-scan](https://github.com/18F/domain-scan).  To keep the
+database size manageable, it also deletes any results that are older
+than a year.
 
 This Docker container is intended to be run via
 [orchestrator](https://github.com/cisagov/orchestrator).
