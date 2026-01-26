@@ -219,7 +219,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
     )
 
     # Delete any records older than one year
-    one_year_ago = date_today - timedelta(years=1)
+    one_year_ago = date_today - timedelta(days=365)
     result = db.https_scan.delete_many({"scan_date": {"$lte": one_year_ago}})
     print(
         f"Deleted {result.deleted_count} scan records from {db.name} on {db.client.address[0]} that were older than {one_year_ago}."
