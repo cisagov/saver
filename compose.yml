@@ -4,6 +4,8 @@
 name: saver
 
 secrets:
+  aws_config:
+    file: ./src/secrets/aws_config
   scan_write_creds:
     file: ./src/secrets/scan_write_creds.yml
 
@@ -24,5 +26,7 @@ services:
     init: true
     restart: "no"
     secrets:
+      - source: aws_config
+        target: aws_config
       - source: scan_write_creds
         target: scan_write_creds.yml
