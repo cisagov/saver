@@ -9,7 +9,10 @@ import os
 from zoneinfo import ZoneInfo
 
 # Third-Party Libraries
+import boto3
 from mongo_db_from_config import db_from_config
+import requests
+from requests_aws4auth import AWS4Auth
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
 HOME_DIR = os.environ.get("CISA_HOME")
@@ -23,6 +26,13 @@ UNIQUE_AGENCIES_FILE = f"{SHARED_DATA_DIR}/artifacts/unique-agencies.csv"
 CLEAN_CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/clean-current-federal.csv"
 
 TRUSTYMAIL_RESULTS_FILE = f"{SHARED_DATA_DIR}/artifacts/results/trustymail.csv"
+
+ES_REGION = "us-east-1"
+ES_URL = (
+    "https://search-dmarc-import-elasticsearch-"
+    f"ekc3pdnqzcuifgu4qssctvq4v4.{ES_REGION}.es.amazonaws.com"
+    "/dmarc_aggregate_reports"
+)
 
 
 class Domainagency:
@@ -243,12 +253,44 @@ def store_data(clean_federal, agency_dict, db_config_file):
         f'Successfully imported {domains_processed} documents to "{db.name}" database on {db.client.address[0]}'
     )
 
-    # Delete any records older than one year
+    # Delete any trustymail records older than one year
     one_year_ago = date_today - timedelta(days=365)
     result = db.trustymail.delete_many({"scan_date": {"$lte": one_year_ago}})
     print(
         f"Deleted {result.deleted_count} scan records from {db.name} on {db.client.address[0]} that were older than {one_year_ago}."
     )
+
+    ###
+    # Delete any DMARC records older than one year
+    ###
+    # Grab the AWS credentials, since we will need them to query
+    # elasticsearch
+    aws_credentials = boto3.Session().get_credentials()
+    # Construct the auth from the AWS credentials
+    awsauth = AWS4Auth(
+        aws_credentials.access_key,
+        aws_credentials.secret_key,
+        ES_REGION,
+        "es",
+        session_token=aws_credentials.token,
+    )
+    query = {
+        "query": {
+            "range": {
+                "report_metadata.date_range.end": {"lte": one_year_ago.timestamp()},
+            },
+        }
+    }
+    # Now perform the query.
+    response = requests.post(
+        f"{ES_URL}/_delete_by_query",
+        auth=awsauth,
+        json=query,
+        headers={"Content-Type": "application/json"},
+        timeout=300,
+    )
+    # Raises an exception if we didn't get back a 200 code
+    response.raise_for_status()
 
 
 if __name__ == "__main__":
