@@ -22,6 +22,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - redis
+    environment:
+      - AWS_CONFIG_FILE=/run/secrets/aws_config
     image: cisagov/saver
     init: true
     restart: "no"
