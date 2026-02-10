@@ -294,8 +294,21 @@ def store_data(clean_federal, agency_dict, db_config_file):
             headers={"Content-Type": "application/json"},
             timeout=300,
         )
-        # Raises an exception if we didn't get back a 200 code
+
+        # Raise an exception if we didn't get back a 200 code
         response.raise_for_status()
+
+        # We got back a 200 code, so extract the JSON response and
+        # provide whatever helpful feedback we can.
+        ans = response.json()
+        if ans.failures:
+            print(
+                f"Failures occurred while deleting DMARC records older than {one_year_ago}."
+            )
+        if ans.timed_out:
+            print(
+                f"Timed out waiting for Elasticsearch to finish deleting DMARC records older than {one_year_ago}.  {ans.deleted} records deleted so far."
+            )
     else:
         # If no AWS credentials are available then print a message and
         # skip deletion of old DMARC data.
