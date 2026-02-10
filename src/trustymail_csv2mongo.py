@@ -266,34 +266,43 @@ def store_data(clean_federal, agency_dict, db_config_file):
     ###
     # Delete any DMARC records older than one year
     ###
+
     # Grab the AWS credentials, since we will need them to query
     # elasticsearch
     aws_credentials = boto3.Session().get_credentials()
-    # Construct the auth from the AWS credentials
-    awsauth = AWS4Auth(
-        aws_credentials.access_key,
-        aws_credentials.secret_key,
-        ES_REGION,
-        "es",
-        session_token=aws_credentials.token,
-    )
-    query = {
-        "query": {
-            "range": {
-                "report_metadata.date_range.end": {"lte": one_year_ago.timestamp()},
-            },
+    if aws_credentials is not None:
+        # Construct the auth from the AWS credentials
+        awsauth = AWS4Auth(
+            aws_credentials.access_key,
+            aws_credentials.secret_key,
+            ES_REGION,
+            "es",
+            session_token=aws_credentials.token,
+        )
+        query = {
+            "query": {
+                "range": {
+                    "report_metadata.date_range.end": {"lte": one_year_ago.timestamp()},
+                },
+            }
         }
-    }
-    # Now perform the query.
-    response = requests.post(
-        f"{ES_URL}/_delete_by_query",
-        auth=awsauth,
-        json=query,
-        headers={"Content-Type": "application/json"},
-        timeout=300,
-    )
-    # Raises an exception if we didn't get back a 200 code
-    response.raise_for_status()
+        # Now perform the query
+        response = requests.post(
+            f"{ES_URL}/_delete_by_query",
+            auth=awsauth,
+            json=query,
+            headers={"Content-Type": "application/json"},
+            timeout=300,
+        )
+        # Raises an exception if we didn't get back a 200 code
+        response.raise_for_status()
+    else:
+        # If no AWS credentials are available then print a message and
+        # skip deletion of old DMARC data.
+        print(
+            "AWS credentials not available; skipping deletion of DMARC records "
+            f"older than {one_year_ago} from Elasticsearch."
+        )
 
 
 if __name__ == "__main__":
