@@ -11,4 +11,4 @@ mongo_db_from_config = {file = "https://github.com/cisagov/mongo-db-from-config/
 
 # This version should match the version of Python in the image
 [requires]
-python_full_version = "3.14.2"
+python_full_version = "3.14.3"

@@ -1,6 +1,6 @@
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.14.2-alpine3.22 AS compile-stage
+FROM docker.io/library/python:3.14.3-alpine3.23 AS compile-stage
 
 ###
 # Unprivileged user variables
@@ -10,10 +10,10 @@ ENV CISA_HOME="/home/${CISA_USER}"
 ENV VIRTUAL_ENV="${CISA_HOME}/.venv"
 
 # Versions of the Python packages installed directly
-ENV PYTHON_PIP_VERSION=25.1.1
-ENV PYTHON_PIPENV_VERSION=2025.0.3
-ENV PYTHON_SETUPTOOLS_VERSION=80.9.0
-ENV PYTHON_WHEEL_VERSION=0.45.1
+ENV PYTHON_PIP_VERSION=26.0.1
+ENV PYTHON_PIPENV_VERSION=2026.0.3
+ENV PYTHON_SETUPTOOLS_VERSION=82.0.0
+ENV PYTHON_WHEEL_VERSION=0.46.3
 
 ###
 # Install the specified versions of pip, setuptools, and wheel into the system
@@ -51,7 +51,7 @@ RUN pipenv install --clear --deploy --extra-pip-args "--no-cache-dir" --verbose
 
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.14.2-alpine3.22 AS build-stage
+FROM docker.io/library/python:3.14.3-alpine3.23 AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
@@ -90,7 +90,7 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 # longer install times.
 ###
 RUN apk --no-cache add \
-    redis=8.0.4-r0
+    redis=8.4.1-r0
 
 ###
 # Copy in the Python virtual environment created in compile-stage, symlink the
