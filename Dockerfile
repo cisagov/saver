@@ -90,7 +90,7 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 # longer install times.
 ###
 RUN apk --no-cache add \
-    redis=8.0.4-r0
+    redis=8.4.1-r0
 
 ###
 # Copy in the Python virtual environment created in compile-stage, symlink the
