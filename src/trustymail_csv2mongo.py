@@ -300,15 +300,36 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
         # We got back a 200 code, so extract the JSON response and
         # provide whatever helpful feedback we can.
-        ans = response.json()
-        if ans.failures:
-            print(
-                f"Failures occurred while deleting DMARC records older than {one_year_ago}."
-            )
-        if ans.timed_out:
-            print(
-                f"Timed out waiting for Elasticsearch to finish deleting DMARC records older than {one_year_ago}.  {ans.deleted} records deleted so far."
-            )
+        ans = None
+        try:
+            ans = response.json()
+        except requests.exceptions.JSONDecodeError as e:
+            print(f"Unable to decode Elasticsearch response as JSON: {e}")
+        else:
+            if isinstance(ans, dict):
+                if "failures" in ans:
+                    failures = ans.get("failures")
+                    if failures:
+                        print(
+                            f"Failures occurred while deleting DMARC records older than {one_year_ago}: {failures}"
+                        )
+                else:
+                    print(
+                        f'JSON response from Elasticsearch does not contain expected key "failures": {ans}'
+                    )
+
+                if "timed_out" in ans:
+                    timed_out = ans.get("timed_out")
+                    if timed_out:
+                        print(
+                            f"Timed out waiting for Elasticsearch to finish deleting DMARC records older than {one_year_ago}.  Deletion will continue."
+                        )
+                else:
+                    print(
+                        f'JSON response from Elasticsearch does not contain expected key "timed_out": {ans}'
+                    )
+            else:
+                print(f"JSON response from Elasticsearch is not a dictionary: {ans}")
     else:
         # If no AWS credentials are available then print a message and
         # skip deletion of old DMARC data.
