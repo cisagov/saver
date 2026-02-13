@@ -24,6 +24,9 @@ services:
       - redis
     environment:
       - AWS_CONFIG_FILE=/run/secrets/aws_config
+      # Setting this environment variable ensures that the config file
+      # (and not just any credentials file that is present) is loaded.
+      - AWS_SDK_LOAD_CONFIG=1
     image: cisagov/saver
     init: true
     restart: "no"
