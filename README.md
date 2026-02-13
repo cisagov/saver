@@ -226,7 +226,8 @@ There are no required environment variables.
 
 | Filename      | Purpose              |
 |---------------|----------------------|
-| database_creds.yml | Cyber Hygiene read-only database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
+| aws_config | AWS CLI configuration in [this format](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format). |
+| scan_write_creds.yml | Cyber Hygiene read-write database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
 
 ## Building from source ##
 
