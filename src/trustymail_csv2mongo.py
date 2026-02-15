@@ -307,6 +307,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
             print(f"Unable to decode Elasticsearch response as JSON: {e}")
         else:
             if isinstance(ans, dict):
+                failures = []
                 if "failures" in ans:
                     failures = ans.get("failures")
                     if failures:
@@ -318,6 +319,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
                         f'JSON response from Elasticsearch does not contain expected key "failures": {ans}'
                     )
 
+                timed_out = False
                 if "timed_out" in ans:
                     timed_out = ans.get("timed_out")
                     if timed_out:
@@ -328,6 +330,16 @@ def store_data(clean_federal, agency_dict, db_config_file):
                     print(
                         f'JSON response from Elasticsearch does not contain expected key "timed_out": {ans}'
                     )
+
+                if not failures and not timed_out:
+                    if "deleted" in ans:
+                        print(
+                            f'Deleted {ans.get("deleted")} DMARC records that were older than {one_year_ago}.'
+                        )
+                    else:
+                        print(
+                            f'JSON response from Elasticsearch does not contain expected key "deleted": {ans}'
+                        )
             else:
                 print(f"JSON response from Elasticsearch is not a dictionary: {ans}")
     else:
