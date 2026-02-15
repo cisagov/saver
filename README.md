@@ -35,7 +35,7 @@ expects the secrets in a different location.
 To run the `cisagov/saver` image via Docker:
 
 ```console
-docker run cisagov/saver:1.5.0
+docker run cisagov/saver:1.6.0
 ```
 
 ### Running with Docker Compose ###
@@ -48,7 +48,7 @@ docker run cisagov/saver:1.5.0
 
     services:
       saver:
-        image: cisagov/saver:1.5.0
+        image: cisagov/saver:1.6.0
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -94,7 +94,7 @@ environment variables.  See the
 
     services:
       trustymail_reporter:
-        image: cisagov/saver:1.5.0
+        image: cisagov/saver:1.6.0
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -131,7 +131,7 @@ environment variables.  See the
 1. Pull the new image:
 
     ```console
-    docker pull cisagov/saver:1.5.0
+    docker pull cisagov/saver:1.6.0
     ```
 
 1. Recreate and run the container by following the [previous instructions](#running-with-docker).
@@ -170,12 +170,12 @@ and then update dependencies as you would above.
 The images of this container are tagged with [semantic
 versions](https://semver.org) of the underlying saver project that they
 containerize.  It is recommended that most users use a version tag (e.g.
-`:1.5.0`).
+`:1.6.0`).
 
 | Image:tag | Description |
 |-----------|-------------|
-|`cisagov/saver:1.5.0`| An exact release version. |
-|`cisagov/saver:1.5`| The most recent release matching the major and minor version numbers. |
+|`cisagov/saver:1.6.0`| An exact release version. |
+|`cisagov/saver:1.6`| The most recent release matching the major and minor version numbers. |
 |`cisagov/saver:1`| The most recent release matching the major version number. |
 |`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
 |`cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
@@ -217,19 +217,17 @@ There are no required environment variables.
 
 ### Optional ###
 
-There are no optional environment variables.
-
-<!--
 | Name  | Purpose | Default |
 |-------|---------|---------|
-| `OPTIONAL_VARIABLE` | Describe its purpose. | `null` |
--->
+| `AWS_CONFIG_FILE` | The location of the config file containing AWS credentials. | `null` |
+| `AWS_SDK_LOAD_CONFIG` | If set to a truthy value (such as 1), ensures that the config file (and not just any credentials file that is present) is loaded. | `null` |
 
 ## Secrets ##
 
 | Filename      | Purpose              |
 |---------------|----------------------|
-| database_creds.yml | Cyber Hygiene read-only database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
+| aws_config | AWS CLI configuration in [this format](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format). |
+| scan_write_creds.yml | Cyber Hygiene read-write database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
 
 ## Building from source ##
 
@@ -237,7 +235,7 @@ Build the image locally using this git repository as the [build context](https:/
 
 ```console
 docker build \
-  --tag cisagov/saver:1.5.0 \
+  --tag cisagov/saver:1.6.0 \
   https://github.com/cisagov/saver.git#develop
 ```
 
@@ -268,7 +266,7 @@ Docker:
       --file Dockerfile-x \
       --platform linux/amd64 \
       --output type=docker \
-      --tag cisagov/saver:1.5.0 .
+      --tag cisagov/saver:1.6.0 .
     ```
 
 ## Contributing ##

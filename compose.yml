@@ -4,6 +4,8 @@
 name: saver
 
 secrets:
+  aws_config:
+    file: ./src/secrets/aws_config
   scan_write_creds:
     file: ./src/secrets/scan_write_creds.yml
 
@@ -20,9 +22,16 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - redis
+    environment:
+      - AWS_CONFIG_FILE=/run/secrets/aws_config
+      # Setting this environment variable ensures that the config file
+      # (and not just any credentials file that is present) is loaded.
+      - AWS_SDK_LOAD_CONFIG=1
     image: cisagov/saver
     init: true
     restart: "no"
     secrets:
+      - source: aws_config
+        target: aws_config
       - source: scan_write_creds
         target: scan_write_creds.yml

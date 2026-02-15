@@ -9,7 +9,10 @@ import os
 from zoneinfo import ZoneInfo
 
 # Third-Party Libraries
+import boto3
 from mongo_db_from_config import db_from_config
+import requests
+from requests_aws4auth import AWS4Auth
 
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
 HOME_DIR = os.environ.get("CISA_HOME")
@@ -23,6 +26,13 @@ UNIQUE_AGENCIES_FILE = f"{SHARED_DATA_DIR}/artifacts/unique-agencies.csv"
 CLEAN_CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/clean-current-federal.csv"
 
 TRUSTYMAIL_RESULTS_FILE = f"{SHARED_DATA_DIR}/artifacts/results/trustymail.csv"
+
+ES_REGION = "us-east-1"
+ES_URL = (
+    "https://search-dmarc-import-elasticsearch-"
+    f"ekc3pdnqzcuifgu4qssctvq4v4.{ES_REGION}.es.amazonaws.com"
+    "/dmarc_aggregate_reports"
+)
 
 
 class Domainagency:
@@ -102,7 +112,10 @@ def store_data(clean_federal, agency_dict, db_config_file):
     :param db_config_file: The name of the file where the database
     configuration is stored
     """
-    date_today = datetime.combine(datetime.now(ZoneInfo("UTC")), time.min)
+    # Today's date at midnight UTC
+    date_today = datetime.combine(
+        datetime.now(ZoneInfo("UTC")), time.min, tzinfo=ZoneInfo("UTC")
+    )
     db = db_from_config(db_config_file)  # set up database connection
     f = open(TRUSTYMAIL_RESULTS_FILE)
     csv_f = csv.DictReader(f)
@@ -243,12 +256,99 @@ def store_data(clean_federal, agency_dict, db_config_file):
         f'Successfully imported {domains_processed} documents to "{db.name}" database on {db.client.address[0]}'
     )
 
-    # Delete any records older than one year
+    # Delete any trustymail records older than one year
     one_year_ago = date_today - timedelta(days=365)
     result = db.trustymail.delete_many({"scan_date": {"$lte": one_year_ago}})
     print(
         f"Deleted {result.deleted_count} scan records from {db.name} on {db.client.address[0]} that were older than {one_year_ago}."
     )
+
+    ###
+    # Delete any DMARC records older than one year
+    ###
+
+    # Grab the AWS credentials, since we will need them to query
+    # elasticsearch
+    aws_credentials = boto3.Session().get_credentials()
+    if aws_credentials is not None:
+        # Construct the auth from the AWS credentials
+        awsauth = AWS4Auth(
+            aws_credentials.access_key,
+            aws_credentials.secret_key,
+            ES_REGION,
+            "es",
+            session_token=aws_credentials.token,
+        )
+        query = {
+            "query": {
+                "range": {
+                    "report_metadata.date_range.end": {"lte": one_year_ago.timestamp()},
+                },
+            }
+        }
+        # Now perform the query
+        response = requests.post(
+            f"{ES_URL}/_delete_by_query",
+            auth=awsauth,
+            json=query,
+            headers={"Content-Type": "application/json"},
+            timeout=300,
+        )
+
+        # Raise an exception if we didn't get back a 200 code
+        response.raise_for_status()
+
+        # We got back a 200 code, so extract the JSON response and
+        # provide whatever helpful feedback we can.
+        ans = None
+        try:
+            ans = response.json()
+        except requests.exceptions.JSONDecodeError as e:
+            print(f"Unable to decode Elasticsearch response as JSON: {e}")
+        else:
+            if isinstance(ans, dict):
+                failures = []
+                if "failures" in ans:
+                    failures = ans.get("failures")
+                    if failures:
+                        print(
+                            f"Failures occurred while deleting DMARC records older than {one_year_ago}: {failures}"
+                        )
+                else:
+                    print(
+                        f'JSON response from Elasticsearch does not contain expected key "failures": {ans}'
+                    )
+
+                timed_out = False
+                if "timed_out" in ans:
+                    timed_out = ans.get("timed_out")
+                    if timed_out:
+                        print(
+                            f"Timed out waiting for Elasticsearch to finish deleting DMARC records older than {one_year_ago}.  Deletion will continue."
+                        )
+                else:
+                    print(
+                        f'JSON response from Elasticsearch does not contain expected key "timed_out": {ans}'
+                    )
+
+                if not failures and not timed_out:
+                    if "deleted" in ans:
+                        print(
+                            f'Deleted {ans.get("deleted")} DMARC records that were older than {one_year_ago}.'
+                        )
+                    else:
+                        print(
+                            f'JSON response from Elasticsearch does not contain expected key "deleted": {ans}'
+                        )
+            else:
+                print(f"JSON response from Elasticsearch is not a dictionary: {ans}")
+    else:
+        # If no AWS credentials are available then print a message and
+        # skip deletion of old DMARC data.
+        print(
+            "AWS credentials not available; skipping deletion of DMARC records "
+            f"older than {one_year_ago} from Elasticsearch."
+        )
 
 
 if __name__ == "__main__":
