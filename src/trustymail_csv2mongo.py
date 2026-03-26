@@ -253,14 +253,16 @@ def store_data(clean_federal, agency_dict, db_config_file):
         domains_processed += 1
 
     print(
-        f'Successfully imported {domains_processed} documents to "{db.name}" database on {db.client.address[0]}'
+        f'Successfully imported {domains_processed} documents to "{db.name}" '
+        f"database on {db.client.address[0]}"
     )
 
     # Delete any trustymail records older than one year
     one_year_ago = date_today - timedelta(days=365)
     result = db.trustymail.delete_many({"scan_date": {"$lte": one_year_ago}})
     print(
-        f"Deleted {result.deleted_count} scan records from {db.name} on {db.client.address[0]} that were older than {one_year_ago}."
+        f"Deleted {result.deleted_count} scan records from {db.name} "
+        f"on {db.client.address[0]} that were older than {one_year_ago}."
     )
 
     ###
@@ -312,11 +314,13 @@ def store_data(clean_federal, agency_dict, db_config_file):
                     failures = ans.get("failures")
                     if failures:
                         print(
-                            f"Failures occurred while deleting DMARC records older than {one_year_ago}: {failures}"
+                            "Failures occurred while deleting DMARC records "
+                            f"older than {one_year_ago}: {failures}"
                         )
                 else:
                     print(
-                        f'JSON response from Elasticsearch does not contain expected key "failures": {ans}'
+                        "JSON response from Elasticsearch does not contain "
+                        f'expected key "failures": {ans}'
                     )
 
                 timed_out = False
@@ -324,21 +328,26 @@ def store_data(clean_federal, agency_dict, db_config_file):
                     timed_out = ans.get("timed_out")
                     if timed_out:
                         print(
-                            f"Timed out waiting for Elasticsearch to finish deleting DMARC records older than {one_year_ago}.  Deletion will continue."
+                            "Timed out waiting for Elasticsearch to finish "
+                            "deleting DMARC records older than "
+                            f"{one_year_ago}.  Deletion will continue."
                         )
                 else:
                     print(
-                        f'JSON response from Elasticsearch does not contain expected key "timed_out": {ans}'
+                        "JSON response from Elasticsearch does not contain "
+                        f'expected key "timed_out": {ans}'
                     )
 
                 if not failures and not timed_out:
                     if "deleted" in ans:
                         print(
-                            f'Deleted {ans.get("deleted")} DMARC records that were older than {one_year_ago}.'
+                            f'Deleted {ans.get("deleted")} DMARC records that '
+                            f"were older than {one_year_ago}."
                         )
                     else:
                         print(
-                            f'JSON response from Elasticsearch does not contain expected key "deleted": {ans}'
+                            "JSON response from Elasticsearch does not "
+                            f'contain expected key "deleted": {ans}'
                         )
             else:
                 print(f"JSON response from Elasticsearch is not a dictionary: {ans}")
