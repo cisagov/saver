@@ -47,7 +47,10 @@ def db_from_config(config_filename):
 
 
 def main():
-    """Create and save the dict of agency names and CyHy IDs keyed by second level domain."""
+    """Create and save the dict of agency names and CyHy IDs.
+
+    The dict is keyed by second-level domain.
+    """
     # Import the agency mapping data
     with open(AGENCIES_FILE, newline="") as agencies_file:
         csvreader = csv.reader(agencies_file)

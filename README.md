@@ -143,9 +143,6 @@ Both updating dependencies and changing the [Pipenv] configuration in `src/Pipfi
 will result in a modified `src/Pipfile.lock` file that should be committed to the
 repository.
 
-> [!WARNING]
-> The `src/Pipfile.lock` as generated will fail `pre-commit` checks due to JSON formatting.
-
 ### Updating dependencies ###
 
 If you want to update existing dependencies you would run the following command
@@ -173,21 +170,21 @@ containerize.  It is recommended that most users use a version tag (e.g.
 `:1.6.1`).
 
 | Image:tag | Description |
-|-----------|-------------|
-|`cisagov/saver:1.6.1`| An exact release version. |
-|`cisagov/saver:1.6`| The most recent release matching the major and minor version numbers. |
-|`cisagov/saver:1`| The most recent release matching the major version number. |
-|`cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
-|`cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
-|`cisagov/saver:latest`| The most recent release image pushed to a container registry.  Pulling an image using the `:latest` tag [should be avoided.](https://vsupalov.com/docker-latest-tag/) |
+| --------- | ----------- |
+| `cisagov/saver:1.6.1` | An exact release version. |
+| `cisagov/saver:1.6` | The most recent release matching the major and minor version numbers. |
+| `cisagov/saver:1` | The most recent release matching the major version number. |
+| `cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
+| `cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
+| `cisagov/saver:latest` | The most recent release image pushed to a container registry.  Pulling an image using the `:latest` tag [should be avoided.](https://vsupalov.com/docker-latest-tag/) |
 
 See the [tags tab](https://hub.docker.com/r/cisagov/saver/tags) on Docker
 Hub for a list of all the supported tags.
 
 ## Volumes ##
 
-| Mount point | Purpose        |
-|-------------|----------------|
+| Mount point | Purpose |
+| ----------- | ------- |
 | /home/cisa/shared | Output |
 
 ## Ports ##
@@ -196,8 +193,8 @@ There are no ports exposed by this container.
 
 <!-- The following ports are exposed by this container: -->
 
-<!-- | Port | Purpose        | -->
-<!-- |------|----------------| -->
+<!-- | Port | Purpose | -->
+<!-- | ---- | ------- | -->
 <!-- | 8080 | Example only; nothing is actually listening on the port | -->
 
 <!-- The sample [Docker composition](docker-compose.yml) publishes the -->
@@ -210,22 +207,22 @@ There are no ports exposed by this container.
 There are no required environment variables.
 
 <!--
-| Name  | Purpose | Default |
-|-------|---------|---------|
+| Name | Purpose | Default |
+| ---- | ------- | ------- |
 | `REQUIRED_VARIABLE` | Describe its purpose. | `null` |
 -->
 
 ### Optional ###
 
-| Name  | Purpose | Default |
-|-------|---------|---------|
+| Name | Purpose | Default |
+| ---- | ------- | ------- |
 | `AWS_CONFIG_FILE` | The location of the config file containing AWS credentials. | `null` |
 | `AWS_SDK_LOAD_CONFIG` | If set to a truthy value (such as 1), ensures that the config file (and not just any credentials file that is present) is loaded. | `null` |
 
 ## Secrets ##
 
-| Filename      | Purpose              |
-|---------------|----------------------|
+| Filename | Purpose |
+| -------- | ------- |
 | aws_config | AWS CLI configuration in [this format](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format). |
 | scan_write_creds.yml | Cyber Hygiene read-write database credentials in [this format](https://github.com/cisagov/mongo-db-from-config#usage). |
 
