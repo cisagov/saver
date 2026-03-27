@@ -1,3 +1,4 @@
+Access Board,USAB
 Administrative Conference of the United States,ACUS
 Advisory Council on Historic Preservation,ACHP
 American Battle Monuments Commission,ABMC
@@ -5,15 +6,16 @@ AMTRAK,AMTRAK
 Appalachian Regional Commission,APPRC
 Armed Forces Retirement Home,AFRH
 Barry Goldwater Scholarship and Excellence in Education Foundation,BGSF
-U.S. Chemical Safety Board,CSB
+Board of Governors of the Federal Reserve,FRB
+Chemical Safety and Hazard Investigation Board,CSB
 Christopher Columbus Fellowship Foundation,CCFF
 Civil Air Patrol,CAP
 Commodity Futures Trading Commission,CFTC
 Consumer Financial Protection Bureau,CFPB
 Consumer Product Safety Commission,CPSC
 Corporation for National and Community Service,CNCS
-Council of Inspectors General on Integrity and Efficiency,CIGIE
-Court Services and Offender Supervision,CSOSA
+Council of the Inspectors General on Integrity and Efficiency,CIGIE
+Court Services and Offender Supervision Agency for the District of Columbia,CSOSA
 Defense Nuclear Facilities Safety Board,DNFSB
 Delta Regional Authority,DRA
 Denali Commission,DENALI
@@ -50,18 +52,18 @@ Federal Labor Relations Authority,FLRA
 Federal Maritime Commission,FMC
 Federal Mediation and Conciliation Service,FMCS
 Federal Mine Safety and Health Review Commission,FMSHRC
-Federal Reserve Board of Governors,FRB
 Federal Retirement Thrift Investment Board,FRTIB
 Federal Trade Commission,FTC
 General Services Administration,GSA
 Government Publishing Office,GPO
 Gulf Coast Ecosystem Restoration Council,GCERC
-Harry S. Truman Scholarship Foundation,HTSF
+Harry S Truman Scholarship Foundation,HTSF
 Institute of Museum and Library Services,IMLS
 Inter-American Foundation,IAF
 International Boundary and Water Commission,IBWC
+International Trade Commission,USITC
 James Madison Memorial Fellowship Foundation,JMMFF
-Japan-U.S. Friendship Commission,JUSFC
+Japan-United States Friendship Commission,JUSFC
 Legal Services Corporation,LSC
 Marine Mammal Commission,MMC
 Merit Systems Protection Board,MSPB
@@ -86,6 +88,8 @@ Nuclear Regulatory Commission,NRC
 Occupational Safety and Health Review Commission,OSHRC
 Office of Government Ethics,OGE
 Office of Personnel Management,OPM
+Office of Special Counsel,OSC
+Peace Corps,PC
 Pension Benefit Guaranty Corporation,PBGC
 Postal Regulatory Commission,PRC
 Presidio Trust,PT
@@ -101,22 +105,18 @@ State Justice Institute,SJI
 Surface Transportation Board,STB
 Tennessee Valley Authority,TVA
 The Legislative Branch,HOR
-United States AbilityOne,USAC
-United States Access Board,USAB
+Trade And Development Agency,USTDA
+U.S. Agency for International Development,USAID
+U.S. Commission of Fine Arts,CFA
+U.S. Commission on Civil Rights,USCCR
+U.S. Interagency Council on Homelessness,USICH
+U.S. Nuclear Waste Technical Review Board,NWTRB
+United States AbilityOne Commission,USAC
 United States African Development Foundation,ADF
 United States Agency for Global Media,USAGM
 United States Holocaust Memorial Museum,USHMM
 United States Institute of Peace,USIP
-United States Interagency Council on Homelessness,USICH
 United States International Development Finance Corporation,DFC
-United States International Trade Commission,USITC
 United States Postal Service,USPS
-United States Postal Service Office of Inspector General,USPSOIG
-U.S. Agency for International Development,USAID
-U.S. Commission of Fine Arts,CFA
-U.S. Commission on Civil Rights,USCCR
-U.S. Nuclear Waste Technical Review Board,NWTRB
-U.S. Office of Special Counsel,OSC
-U.S. Trade and Development Agency,USTDA
-Peace Corps,PC
+"United States Postal Service, Office of Inspector General",USPSOIG
 Vietnam Education Foundation,VEF
