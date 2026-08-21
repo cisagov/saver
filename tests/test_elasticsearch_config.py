@@ -58,9 +58,7 @@ def test_invalid_elasticsearch_url_is_rejected(value):
 def test_elasticsearch_url_region_must_match_signing_region():
     """The endpoint and SigV4 signing regions must match."""
     with pytest.raises(ValueError, match="configured AWS region"):
-        get_elasticsearch_delete_url(
-            "us-west-2", {"ELASTICSEARCH_URL": VALID_URL}
-        )
+        get_elasticsearch_delete_url("us-west-2", {"ELASTICSEARCH_URL": VALID_URL})
 
 
 @pytest.mark.parametrize(
