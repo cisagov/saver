@@ -10,8 +10,11 @@ ENV CISA_HOME="/home/${CISA_USER}"
 ENV VIRTUAL_ENV="${CISA_HOME}/.venv"
 
 # Versions of the Python packages installed directly
+# renovate: datasource=pypi depName=pip
 ENV PYTHON_PIP_VERSION=26.1.2
+# renovate: datasource=pypi depName=pipenv
 ENV PYTHON_PIPENV_VERSION=2026.6.2
+# renovate: datasource=pypi depName=setuptools
 ENV PYTHON_SETUPTOOLS_VERSION=82.0.1
 
 ###
@@ -82,12 +85,17 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 #
 # We need redis so we can use redis-cli to communicate with redis.
 #
+# Note that the "alpine_3_23" strings below must be kept in sync with
+# the version of Alpine corresponding to the base images.
+#
 # Note that we use apk --no-cache to avoid writing to a local cache.
 # This results in a smaller final image, at the cost of slightly
 # longer install times.
 ###
-RUN apk --no-cache add \
-    redis=8.4.2-r0
+# renovate: datasource=repology depName=alpine_3_23/redis
+ENV REDIS_VERSION=8.4.2-r0
+ENV DEPS="redis=${REDIS_VERSION}"
+RUN apk --no-cache add $DEPS
 
 ###
 # Copy in the Python virtual environment created in compile-stage, symlink the
