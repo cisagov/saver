@@ -218,6 +218,7 @@ There are no required environment variables.
 | ---- | ------- | ------- |
 | `AWS_CONFIG_FILE` | The location of the config file containing AWS credentials. | `null` |
 | `AWS_SDK_LOAD_CONFIG` | If set to a truthy value (such as 1), ensures that the config file (and not just any credentials file that is present) is loaded. | `null` |
+| `ELASTICSEARCH_URL` | The base HTTPS URL for a standard AWS-managed Elasticsearch or OpenSearch domain. This must be set when AWS credentials are available, and its region must match the AWS session region. | `null` |
 
 ## Secrets ##
 
