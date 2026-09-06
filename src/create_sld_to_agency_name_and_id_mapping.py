@@ -20,6 +20,14 @@ AGENCIES_FILE = f"{INCLUDE_DATA_DIR}/agencies.csv"
 CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/current-federal_modified.csv"
 
 
+def _open_file(filename, mode="r", **kwargs):
+    """Open a file and raise a clear error if opening fails."""
+    try:
+        return open(filename, mode, **kwargs)
+    except OSError as err:
+        raise RuntimeError(f'Unable to open file "{filename}": {err}') from err
+
+
 def db_from_config(config_filename):
     """Create a database connection from a configuration file.
 
@@ -28,7 +36,7 @@ def db_from_config(config_filename):
     """
     db = None
 
-    with open(config_filename) as stream:
+    with _open_file(config_filename) as stream:
         config = yaml.safe_load(stream)
 
     if config is not None:
@@ -52,7 +60,7 @@ def main():
     The dict is keyed by second-level domain.
     """
     # Import the agency mapping data
-    with open(AGENCIES_FILE, newline="") as agencies_file:
+    with _open_file(AGENCIES_FILE, newline="") as agencies_file:
         csvreader = csv.reader(agencies_file)
         agency_mapping = {row[0]: row[1] for row in csvreader}
 
@@ -67,7 +75,7 @@ def main():
     # rows from the collection and (2) use insert_many() to insert all
     # the new data.  That will be much cleaner!
     now = datetime.now(timezone.utc)
-    with open(CURRENT_FEDERAL_FILE, newline="") as current_federal_file:
+    with _open_file(CURRENT_FEDERAL_FILE, newline="") as current_federal_file:
         csvreader = csv.DictReader(current_federal_file)
         for row in csvreader:
             domain = row["Domain name"].lower()
@@ -118,4 +126,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RuntimeError as err:
+        print(err)
+        raise SystemExit(1)
