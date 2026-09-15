@@ -1,6 +1,6 @@
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.14.7-alpine3.23 AS compile-stage
+FROM docker.io/library/python:3.14.7-alpine3.24 AS compile-stage
 
 ###
 # Unprivileged user variables
@@ -51,7 +51,7 @@ RUN pipenv install --clear --deploy --extra-pip-args="--no-cache-dir" --verbose
 
 # Official Docker images are in the form library/<app> while non-official
 # images are in the form <user>/<app>.
-FROM docker.io/library/python:3.14.7-alpine3.23 AS build-stage
+FROM docker.io/library/python:3.14.7-alpine3.24 AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
@@ -92,8 +92,8 @@ RUN addgroup --system --gid ${CISA_UID} ${CISA_GROUP} \
 # This results in a smaller final image, at the cost of slightly
 # longer install times.
 ###
-# renovate: datasource=repology depName=alpine_3_23/redis
-ENV REDIS_VERSION=8.4.2-r0
+# renovate: datasource=repology depName=alpine_3_24/redis
+ENV REDIS_VERSION=8.8.0-r0
 ENV DEPS="redis=${REDIS_VERSION}"
 RUN apk --no-cache add $DEPS
 
