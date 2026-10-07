@@ -14,6 +14,9 @@ from mongo_db_from_config import db_from_config
 import requests
 from requests_aws4auth import AWS4Auth
 
+# cisagov Libraries
+from elasticsearch_config import get_elasticsearch_delete_url
+
 DB_CONFIG_FILE = "/run/secrets/scan_write_creds.yml"
 HOME_DIR = os.environ.get("CISA_HOME")
 INCLUDE_DATA_DIR = f"{HOME_DIR}/include"
@@ -26,13 +29,6 @@ UNIQUE_AGENCIES_FILE = f"{SHARED_DATA_DIR}/artifacts/unique-agencies.csv"
 CLEAN_CURRENT_FEDERAL_FILE = f"{SHARED_DATA_DIR}/artifacts/clean-current-federal.csv"
 
 TRUSTYMAIL_RESULTS_FILE = f"{SHARED_DATA_DIR}/artifacts/results/trustymail.csv"
-
-ES_REGION = "us-east-1"
-ES_URL = (
-    "https://search-dmarc-import-elasticsearch-"
-    f"ekc3pdnqzcuifgu4qssctvq4v4.{ES_REGION}.es.amazonaws.com"
-    "/dmarc_aggregate_reports"
-)
 
 
 class Domainagency:
@@ -271,13 +267,17 @@ def store_data(clean_federal, agency_dict, db_config_file):
 
     # Grab the AWS credentials, since we will need them to query
     # elasticsearch
-    aws_credentials = boto3.Session().get_credentials()
+    aws_session = boto3.Session()
+    aws_credentials = aws_session.get_credentials()
     if aws_credentials is not None:
+        es_region = aws_session.region_name
+        es_delete_url = get_elasticsearch_delete_url(es_region)
+
         # Construct the auth from the AWS credentials
         awsauth = AWS4Auth(
             aws_credentials.access_key,
             aws_credentials.secret_key,
-            ES_REGION,
+            es_region,
             "es",
             session_token=aws_credentials.token,
         )
@@ -290,7 +290,7 @@ def store_data(clean_federal, agency_dict, db_config_file):
         }
         # Now perform the query
         response = requests.post(
-            f"{ES_URL}/_delete_by_query",
+            es_delete_url,
             auth=awsauth,
             json=query,
             headers={"Content-Type": "application/json"},
