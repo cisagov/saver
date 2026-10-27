@@ -172,8 +172,8 @@ containerize.  It is recommended that most users use a version tag (e.g.
 | Image:tag | Description |
 | --------- | ----------- |
 | `cisagov/saver:2.0.0-rc.1` | An exact release version. |
-| `cisagov/saver:1.6` | The most recent release matching the major and minor version numbers. |
-| `cisagov/saver:1` | The most recent release matching the major version number. |
+| `cisagov/saver:2.0` | The most recent release matching the major and minor version numbers. |
+| `cisagov/saver:2` | The most recent release matching the major version number. |
 | `cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
 | `cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
 | `cisagov/saver:latest` | The most recent release image pushed to a container registry.  Pulling an image using the `:latest` tag [should be avoided.](https://vsupalov.com/docker-latest-tag/) |
