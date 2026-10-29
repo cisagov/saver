@@ -35,7 +35,7 @@ expects the secrets in a different location.
 To run the `cisagov/saver` image via Docker:
 
 ```console
-docker run cisagov/saver:1.6.6
+docker run cisagov/saver:2.0.0-rc.2
 ```
 
 ### Running with Docker Compose ###
@@ -48,7 +48,7 @@ docker run cisagov/saver:1.6.6
 
     services:
       saver:
-        image: cisagov/saver:1.6.6
+        image: cisagov/saver:2.0.0-rc.2
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -94,7 +94,7 @@ environment variables.  See the
 
     services:
       trustymail_reporter:
-        image: cisagov/saver:1.6.6
+        image: cisagov/saver:2.0.0-rc.2
         volumes:
           - source: <your_log_dir>
             target: /home/cisa/shared
@@ -131,7 +131,7 @@ environment variables.  See the
 1. Pull the new image:
 
     ```console
-    docker pull cisagov/saver:1.6.6
+    docker pull cisagov/saver:2.0.0-rc.2
     ```
 
 1. Recreate and run the container by following the [previous instructions](#running-with-docker).
@@ -167,13 +167,13 @@ and then update dependencies as you would above.
 The images of this container are tagged with [semantic
 versions](https://semver.org) of the underlying saver project that they
 containerize.  It is recommended that most users use a version tag (e.g.
-`:1.6.6`).
+`:2.0.0-rc.2`).
 
 | Image:tag | Description |
 | --------- | ----------- |
-| `cisagov/saver:1.6.6` | An exact release version. |
-| `cisagov/saver:1.6` | The most recent release matching the major and minor version numbers. |
-| `cisagov/saver:1` | The most recent release matching the major version number. |
+| `cisagov/saver:2.0.0-rc.2` | An exact release version. |
+| `cisagov/saver:2.0` | The most recent release matching the major and minor version numbers. |
+| `cisagov/saver:2` | The most recent release matching the major version number. |
 | `cisagov/saver:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
 | `cisagov/saver:nightly` | A nightly build of the `develop` branch of this repository. |
 | `cisagov/saver:latest` | The most recent release image pushed to a container registry.  Pulling an image using the `:latest` tag [should be avoided.](https://vsupalov.com/docker-latest-tag/) |
@@ -232,7 +232,7 @@ Build the image locally using this git repository as the [build context](https:/
 
 ```console
 docker build \
-  --tag cisagov/saver:1.6.6 \
+  --tag cisagov/saver:2.0.0-rc.2 \
   https://github.com/cisagov/saver.git#develop
 ```
 
@@ -263,7 +263,7 @@ Docker:
       --file Dockerfile-x \
       --platform linux/amd64 \
       --output type=docker \
-      --tag cisagov/saver:1.6.6 .
+      --tag cisagov/saver:2.0.0-rc.2 .
     ```
 
 ## Contributing ##
