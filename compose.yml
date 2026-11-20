@@ -27,6 +27,8 @@ services:
       # Setting this environment variable ensures that the config file
       # (and not just any credentials file that is present) is loaded.
       - AWS_SDK_LOAD_CONFIG=1
+      # This is a placeholder suitable only for local testing.
+      - ELASTICSEARCH_URL=https://search-example.us-east-1.es.amazonaws.com
     image: cisagov/saver
     init: true
     restart: "no"
