@@ -11,6 +11,10 @@ secrets:
 
 services:
   redis:
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:-gatherer-dev-only}
     image: redis:alpine
 
   saver:
@@ -23,10 +27,11 @@ services:
     depends_on:
       - redis
     environment:
-      - AWS_CONFIG_FILE=/run/secrets/aws_config
+      AWS_CONFIG_FILE: /run/secrets/aws_config
       # Setting this environment variable ensures that the config file
       # (and not just any credentials file that is present) is loaded.
-      - AWS_SDK_LOAD_CONFIG=1
+      AWS_SDK_LOAD_CONFIG: 1
+      REDISCLI_AUTH: ${REDIS_PASSWORD:-gatherer-dev-only}
     image: cisagov/saver
     init: true
     restart: "no"
